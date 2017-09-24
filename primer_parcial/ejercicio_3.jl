@@ -1,7 +1,7 @@
 include("lib/power_method.jl")
 
 #EJERCICIO 3
-ε = 1e-10
+ε = 1e-16
 A = [1 1 2; -1 9 3; 0 -1 3];
 n = size(A)[1]
 Λ = ones(n) * NaN
