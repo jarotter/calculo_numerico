@@ -12,7 +12,7 @@ q₀ = ones(n)
 while guessed < n
     q₀ = rand(n)
     v, λ = metodo_potencia(A, q₀, ε)
-    if norm(Λ - λ, Inf) > 10e-8 #Es linealmente independiente
+    if norm(Λ - λ, Inf) > 1e-12#Es linealmente independiente
         guessed += 1
         Λ[guessed] = λ
         V[:, guessed] = v
