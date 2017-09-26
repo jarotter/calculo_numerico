@@ -13,12 +13,14 @@ end
 
 function crear_matriz_google(A, q)
     n = size(A)[1]
-    v = ones(n)
-    K = A*v #Las sumas por renglón
+    K = A * ones(n) #Las sumas por renglón
+
     for j = 1:n
         A[j, 1:n] = K[j] == 0 ? ones(n)/n : A[j, 1:n] / K[j]
     end
+
     S = ones((n,n))/n
+
     G = q*S + (1-q)*A
     return G
 end

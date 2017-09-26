@@ -2,7 +2,7 @@ include("lib/google_matrix.jl")
 include("lib/power_method.jl")
 
 #EJERCICIO 6
-n = 100
+n = 10000
 A = zeros(2n+1, 2n+1);
 q₀ = ones(2n+1)
 
@@ -15,7 +15,7 @@ for i = 2:2n+1
     end
 end
 
-Gₐ = crear_matriz_google(A, 0.15);
+Gₐ = crear_matriz_google(A, 0.85);
 rₐ = metodo_potencia(Gₐ', q₀, 1e-10, var = "classic")[1]
 rₐ = rₐ / norm(rₐ, 1)
 
