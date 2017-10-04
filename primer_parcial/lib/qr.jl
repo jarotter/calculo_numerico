@@ -27,15 +27,15 @@ function qr_simple(A, max_iter, ε)
     num_iter = 0
 
     for i = 1:max_iter
+        num_iter += 1
         Q, R = qr(A)
         V = V*Q
         A = R*Q
         if norm(diag(A, -1)) < ε
-            num_iter = i
             break
         end
     end
-    return diag(A), is_symmetric, V, min(num_iter, max_iter)
+    return diag(A), is_symmetric, V, num_iter
 end
 
 
