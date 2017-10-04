@@ -28,8 +28,3 @@ B[1, :] = B[:, 1] = q₀
 Gᵦ = crear_matriz_google(B, 0.15);
 rᵦ = metodo_potencia(Gᵦ', q₀, 1e-10, var = "classic")[1]
 rᵦ= rᵦ / norm(rᵦ, 1)
-
-#= La distribución estacionaria no cambia porque intuitivamente, como todos
-los estados eran ya positivos recurrentes, no añadimos ninguna posibilidad
-de "atorarnos" ni logramos "entrar a algo nuevo". De hecho, la cadena
-original ya era irreducible=#
