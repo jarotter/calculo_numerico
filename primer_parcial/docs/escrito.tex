@@ -1,0 +1,592 @@
+\documentclass[11pt]{article}
+
+\marginparwidth 0.1in
+\oddsidemargin 0.1in
+\evensidemargin 0.1in
+\marginparsep 0.1in
+\topmargin 0.1in
+\textwidth 6in \textheight 8 in
+
+\usepackage{upgreek}
+\usepackage[spanish,mexico]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+
+\begin{document}
+\author{Saúl Adrián Álvarez Tapia \and
+	Carlos Eduardo Gil Mezta \and
+	Jorge Antonio Rotter Vallejo \and
+	Sergio de Jesús Arnaud Gómez}
+
+\title{\Huge Práctica 1: Valores y vectores propios}
+\date{}
+\maketitle
+
+\noindent
+\textbf{\LARGE{Sección 1}}
+
+\noindent
+El problema de encontrar eigenvalores/eigenvectores (vaps/veps) de una matriz
+$A\in K^{n\times n}$ consiste en encontrar $\rho \in K$,  $v\in K^n\setminus\{0\}$
+tales que $Av=\rho v$. En este caso, se dice que $(\rho,v)$ es una pareja
+eigenvalor/eigenvector de $A$. Toda matriz tiene a lo más $n$ parejas vap/vep
+con sus vectores propios linealmente independientes, y en caso de que $K=\mathbb{C}$,
+toda matriz tiene al menos una pareja vap/vep.
+
+El problema de encontrar vaps/veps es relevante ya que, al resolverlo, se puede
+comprimir información, hacer análisis de componentes principales, resolver ciertos
+sistemas de ecuaciones diferenciales y reducir la complejidad de varios problemas
+ del álgebra lineal. Considerando que muchos problemas del mundo real se pueden
+ simular usando una aproximación matricial, el encontrar los vaps/veps de una
+ matriz es un problema muy importante en las matemáticas computacionales modernas.
+
+Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor
+propio de $A$, con vector propio asociado cualquier vector no cero que resuelva
+la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$,
+y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$.
+Además, obtener el determinante de una matriz es un proceso computacionalmente
+caro ($O(n^3)$), y numéricamente inestable.
+
+Por lo tanto, se vuelve necesario encontrar una forma de aproximar los vaps/veps
+de una manera numéricamente estable y con una complejidad aceptable. Para ello,
+estudiamos principalmente dos algoritmos: el método de la potencia y el algoritmo QR.
+
+El método de la potencia funciona bajo el principio de que si hay un vap
+$\lambda_1$ dominante (es decir, que para cualquier otro vap $\mu$ de $A$,
+$|\lambda_1|>|\mu|$), entonces, para casi cualquier vector $v$, la secuencia
+\[
+	\dfrac{v}{||v||},\dfrac{Av}{||Av||},\dots,\dfrac{A^kv}{||A^kv||}
+\]
+converge a $v_1$, con $Av_1=\lambda_1v_1$. El método de la potencia consiste en
+generar esta secuencia hasta que se pueda decir que convergimos.
+Este método converge linealmente con razón $\dfrac{|\lambda_2|}{|\lambda_1|}$,
+donde $\lambda_2$ es el vap de mayor magnitud después de $\lambda_1$.
+
+Este método tiene ciertos problemas. Por ejemplo, si no hay un vap dominante,
+la secuencia no convergerá. Si hay un vap dominante, pero no muy dominante
+(es decir, existe $\mu$ vap de $A$ tal que $|\mu|\approx |\lambda_1|$), entonces
+el método de la potencia convergerá lentamente. Por otra parte, el método de la
+potencia sólo puede encontrar el vap de mayor magnitud, así que si queremos
+encontrar todas las parejas vap/vep, este no es el camino.
+
+Existen ciertas modificaciones a este método que hacen que pueda encontrar vaps
+distintas a la de mayor magnitud. Estas se basan principalmente en que para toda
+matriz $A$ invertible, si $\lambda$ es vap de $A$, entonces $1/\lambda$ es vap
+de $A^{-1}$, y que para toda matriz, si $\lambda$ es vap de $A$, entonces
+$\lambda-\mu$ es vap de $A-\mu I$. Usando estas propiedades, podemos encontrar
+más vaps/veps. Estas modificaciones generan el método de la potencia inversa
+con shift. Sin embargo, siguen teniendo convergencia lineal.
+
+Existe una modificación, basada en coeficientes de Rayleigh, que puede buscar
+vaps arbitrarios, y que además converge cuadráticamente.
+
+En este laboratorio, implementamos el método de la potencia regular, el método
+de la potencia inversa con shift y el método de Rayleigh.
+
+El algoritmo QR se basa en los mismos principios que el método de la potencia.
+Sin embargo, con este método podemos encontrar todos los vaps/veps de una matriz
+simultáneamente ya que el algoritmo QR usa el hecho de que los veps de distintos
+vaps son linealmente independientes.
+
+El método QR consiste en que a partir de la matriz inicial $A$, obtener su
+factorización $QR$, donde $Q$ es ortonormal y $R$ triangular superior. Luego, se
+genera la matriz $RQ=Q*AQ$, que es similar a $A$. Por un teorema visto en clase,
+al repetir este proceso esta matriz converge a una matriz triangular superior,
+de la cuál el determinante es fácil de calcular, y por lo tanto, los vaps también.
+
+La convergencia del algoritmo QR es lineal, y su complejidad no es muy buena.
+Sin embargo, haciendo unos pequeños trucos, como empezar usando la factorización
+de Hessenberg de A o usando shifts apropiados durante la QR, su convergencia se
+acelera radicalmente.
+
+Por otra parte, el algoritmo QR es numéricamente muy estable, ya que sólo
+manipula matrices ortonormales.
+
+El algoritmo QR es el método predilecto para los problemas actuales de vaps/veps.
+
+Nosotros implementamos tanto el método QR clásico como el método QR dinámico.
+\\
+\\
+\noindent
+\textbf{\LARGE{Sección 2}}
+
+\noindent
+La principal diferencia de nuestro trabajo con lo visto en clase es el uso de
+Julia, un lenguaje de programación aún poco utilizado. Fuera de eso, las
+particularidades de nuestro código son las siguientes:
+
+\begin{itemize}
+	\item El método de la potencia-Rayleigh tiene como condición de finalización
+		alternativa a superar el número de iteraciones el que la matriz $A-\rho I$,
+		donde $\rho$ es el shift de Rayleigh actual, sea singular.
+	\item Para los métodos QR, usamos factorización de Hessenberg.
+	\item Para el método QR dinámico, usamos shift de Wilkinson.
+\end{itemize}
+
+\\
+\noindent
+\textbf{\LARGE{Sección 3}}
+\\
+\noindent
+\textbf{Ejercicio 1}
+
+a) Después de haber aplicado el método de la potencia a la matriz
+$$
+A =
+\begin{bmatrix}
+\ \ 1 & \ \ 1 & \ \ 2 \ \ \\
+-1 & \ \ 9 & \ \ 3 \ \ \\
+\ \ 0 & -1 & \ \ 3 \ \
+\end{bmatrix}
+$$
+
+con el vector inicial $\textbf{q}_0 =
+\begin{bmatrix}
+1 \\
+1 \\
+1
+\end{bmatrix}$, se obtuvieron como valor y vector propios:
+ \[
+ \lambda = 8.354544835511888
+ \qquad\text{y}\qquad
+ \textbf{v} = \begin{bmatrix}
+ 0.08518345321780828 \\
+ 1.00     \\
+ -0.18675723715906348 \\
+\end{bmatrix}
+ \]
+ \\
+
+b) El método de Julia para calcular valores y vectores propios dio como resultados:
+\[
+ \lambda_1 = 8.35454483516155
+ \qquad\text{y}\qquad
+ \textbf{v}_1 = \begin{bmatrix}
+0.08344366245939693 \\
+0.9795759546471593 \\
+-0.18294289893971968 \\
+\end{bmatrix}
+ \]
+ \\
+
+ c) Normalizando $\textbf{v}_1$, obtenemos:
+ $$\frac{\textbf{v}1}{||\textbf{v}_1||\infty} =
+\begin{bmatrix}
+0.08518345317025786 \\
+1.00 \\
+-0.1867572372227279
+\end{bmatrix}$$
+\\
+
+Notemos que, salvo por un factor constante, el vector propio $\textbf{v}$ calculado con el método de la potencia es igual al vector propio $\textbf{v}_1$ calculado por Julia.
+\\
+
+Ahora, veamos las razones
+$$
+r_j = \frac{||\textbf{q}{j+1} - \textbf{v}||\infty}{||\textbf{q}{j} - \textbf{v}||\infty}
+$$
+\\
+
+\begin{multicols}{3}
+\noindent
+$r_1$ = 0.3723858933535865 \\
+$r_2$ = 0.3947898421559911 \\
+$r_3$ = 0.40353317920115317 \\
+$r_4$ = 0.40704312628481176 \\
+$r_5$ = 0.4084682723923035 \\
+$r_6$ = 0.4090496328317853 \\
+$r_7$ = 0.40928724073553063 \\
+$r_8$ = 0.4093844091160062 \\
+$r_9$ = 0.4094240984438118 \\
+$r_{10}$ = 0.4094401618698333 \\
+$r_{11}$ = 0.40944629465903026 \\
+$r_{12}$ = 0.4094477245034639 \\
+$r_{13}$ = 0.4094456706115635 \\
+$r_{14}$ = 0.4094383839364173 \\
+$r_{15}$ = 0.4094196574874508 \\
+$r_{16}$ = 0.4093735364467985 \\
+$r_{17}$ = 0.4092607095659459 \\
+$r_{18}$ = 0.4089849081976997 \\
+$r_{19}$ = 0.4083102111249005 \\
+$r_{20}$ = 0.40665590279039 \\
+$r_{21}$ = 0.40257643286687966 \\
+$r_{22}$ = 0.3923733704922536 \\
+$r_{23}$ = 0.365925821340209 \\
+$r_{24}$ = 0.29050437096565 \\
+$r_{25}$ = 0.0 \\
+$r_{26}$ = \text{Inf} \\
+$r_{27}$ = 1.40945153934118 \\
+$r_{28}$ = 1.1189479390636417 \\
+$r_{29}$ = 1.0435261697672753 \\
+$r_{30}$ = 1.017078113799665 \\
+\end{multicols}
+
+
+
+d) La norma teórica es:
+$$
+\left| \frac{\lambda_2}{\lambda_1} \right| = 0.40945181373495726
+$$
+
+y vemos que las normas en los incisos c) y d) son esencialmente iguales, salvo por errores de aproximación numérica.
+\\
+
+\noindent
+\textbf{Ejercicio 2}
+
+\noindent
+Método de la potencia inversa con shift $\rho = 0$ aplicado a $A$ con vector inicial $\textbf{q}_0$.
+
+a) Se obtuvieron como valor y vector propios:
+ \[
+ \lambda = 1.224671629205953
+ \qquad\text{y}\qquad
+ \textbf{v} = \begin{bmatrix}
+1.00 \\
+0.10565065554749963 \\
+0.05951048682922665 \\
+\end{bmatrix}
+ \]
+ \\
+ \\
+
+b) El método de Julia para calcular valores y vectores propios dio como resultados:
+\[
+ \lambda_1 = 1.2246716291515263
+ \qquad\text{y}\qquad
+ \textbf{v}_1 = \begin{bmatrix}
+-0.9927283126924615 \\
+-0.10488239703499058 \\
+-0.059077745141235156 \\
+\end{bmatrix}
+ \]
+ \\
+ \\
+
+ c) Normalizando $\textbf{v}_1$, obtenemos:
+ $$\frac{\textbf{v}1}{||\textbf{v}_1||\infty} =
+\begin{bmatrix}
+-1.00 \\
+-0.10565065556610374 \\
+-0.05951048679271115 \\
+\end{bmatrix}$$
+\\
+\\
+
+Notemos que, salvo por un factor constante, el vector propio $\textbf{v}$ calculado con el método de la potencia es igual al vector propio $\textbf{v}_1$ calculado por Julia.
+\\
+\\
+
+Ahora, veamos las razones
+$$
+r_j = \frac{||\textbf{q}{j+1} - \textbf{v}||\infty}{||\textbf{q}{j} - \textbf{v}||\infty}
+$$
+\\
+
+\begin{multicols}{3}
+\noindent
+$ r_{1} $ = 1.0 \\
+$ r_{2} $ = 0.8542917968590314 \\
+$ r_{3} $ = 0.565767866528141 \\
+$ r_{4} $ = 0.4496157392942056 \\
+$ r_{5} $ = 0.3938455853242537 \\
+$ r_{6} $ = 0.37129726345621406 \\
+$ r_{7} $ = 0.3628356745142426 \\
+$ r_{8} $ = 0.359749421095197 \\
+$ r_{9} $ = 0.3586351319070328 \\
+$ r_{10} $ = 0.3582341677250352 \\
+$ r_{11} $ = 0.3580899932546206 \\
+$ r_{12} $ = 0.3580380882567092 \\
+$ r_{13} $ = 0.35801921682548565 \\
+$ r_{14} $ = 0.3580118561159328 \\
+$ r_{15} $ = 0.35800761393024155 \\
+$ r_{16} $ = 0.35800163976493404 \\
+$ r_{17} $ = 0.35798706917444434 \\
+$ r_{18} $ = 0.3579471303382953 \\
+$ r_{19} $ = 0.3578358216405784 \\
+$ r_{20} $ = 0.3575248065699232 \\
+$ r_{21} $ = 0.35665450883842625 \\
+$ r_{22} $ = 0.35421104981574186 \\
+$ r_{23} $ = 0.34728653885535626 \\
+$ r_{24} $ = 0.3271338277321181 \\
+$ r_{25} $ = 0.2636279367426734  \\
+$ r_{26} $ = 0.0 \\
+$ r_{27} $ = \text{Inf} \\
+$ r_{28} $ = 1.35800921553137  \\
+$ r_{29} $ = 1.0943812412338012 \\
+$ r_{30} $ = 1.0308752327746742 \\
+\end{multicols}
+
+
+
+d) La norma teórica es:
+$$
+\left| \frac{\lambda_n}{\lambda_{n-1}} \right| = 0.35800909831776423
+$$
+
+y vemos que las normas en los incisos c) y d) son esencialmente iguales, salvo por errores de aproximación numérica.
+\\
+\\
+
+\noindent
+Método de la potencia inversa con shift $\rho = 3.5$ aplicado a $A$ con vector inicial $\textbf{q}_0$.
+
+a) Se obtuvieron como valor y vector propios:
+ \[
+ \lambda = 3.4207835356870624
+ \qquad\text{y}\qquad
+ \textbf{v} = \begin{bmatrix}
+0.6523575697850283 \\
+-0.4207835356870626\\
+1.00 \\
+\end{bmatrix}
+ \]
+ \\
+ \\
+
+b) El método de Julia para calcular valores y vectores propios dio como resultados:
+\[
+ \lambda_1 = 3.4207835356869154
+ \qquad\text{y}\qquad
+ \textbf{v}_1 = \begin{bmatrix}
+0.5153107267324352 \\
+-0.3323856112281586 \\
+0.7899206671324489 \\
+\end{bmatrix}
+ \]
+ \\
+ \\
+
+ c) Normalizando $\textbf{v}_1$, obtenemos:
+ $$\frac{\textbf{v}1}{||\textbf{v}_1||\infty} =
+\begin{bmatrix}
+0.6523575697836895 \\
+-0.42078353568691507 \\
+1.00 \\
+\end{bmatrix}$$
+\\
+\\
+
+Notemos que, salvo por un factor constante, el vector propio $\textbf{v}$ calculado con el método de la potencia es igual al vector propio $\textbf{v}_1$ calculado por Julia.
+\\
+\\
+
+Ahora, veamos las razones
+$$
+r_j = \frac{||\textbf{q}{j+1} - \textbf{v}||\infty}{||\textbf{q}{j} - \textbf{v}||\infty}
+$$
+\\
+
+\begin{multicols}{3}
+\noindent
+$ r_{1} $ = 0.016689323935299996 \\
+$ r_{2} $ = 0.01567021398656163 \\
+$ r_{3} $ = 0.017755141369851894 \\
+$ r_{4} $ = 0.013498249340114093 \\
+$ r_{5} $ = 0.039384710051032855 \\
+$ r_{6} $ = 0.0 \\
+$ r_{7} $ = \text{Inf} \\
+$ r_{8} $ = 1.0379310344827586 \\
+$ r_{9} $ = 1.0010797342192692 \\
+$ r_{10} $ = 1.0000829668962083 \\
+$ r_{11} $ = 1.0 \\
+$ r_{12} $ = 1.0 \\
+$ r_{13} $ = 1.0 \\
+$ r_{14} $ = 1.0 \\
+$ r_{15} $ = 1.0 \\
+$ r_{16} $ = 1.0 \\
+$ r_{17} $ = 1.0 \\
+$ r_{18} $ = 1.0 \\
+$ r_{19} $ = 1.0 \\
+$ r_{20} $ = 1.0 \\
+$ r_{21} $ = 1.0 \\
+$ r_{22} $ = 1.0 \\
+$ r_{23} $ = 1.0 \\
+$ r_{24} $ = 1.0 \\
+$ r_{25} $ = 1.0 \\
+$ r_{26} $ = 1.0 \\
+$ r_{27} $ = 1.0 \\
+$ r_{28} $ = 1.0 \\
+$ r_{29} $ = 1.0 \\
+$ r_{30} $ = 1.0 \\
+\end{multicols}
+
+
+
+d) La norma teórica es:
+$$
+\left| \frac{\lambda_n}{\lambda_{n-1}} \right| = 0.03481539865981832
+$$
+
+y vemos que las normas en los incisos c) y d) son esencialmente iguales, salvo por errores de aproximación numérica.
+
+\noindent
+\\
+\\
+\noindent
+\textbf{Ejercicio 3}
+
+\noindent
+Al aplicarle el método de la potencia con shift del cociente de Rayleigh a la matriz $A$ y con distintos vectores iniciales se obtuvo lo siguiente:
+
+\[
+ D = P^{-1}AP
+ \qquad\text{y}\qquad
+\text{con}
+ \]
+
+\[
+ D =
+ \begin{bmatrix}
+ 3.420784 & 0 & 0 \\
+ 0 & 8.354545 & 0 \\
+ 0 & 0 & 1.224672
+\end{bmatrix}
+ \qquad\text{y}\qquad
+P =
+ \begin{bmatrix}
+  0.652358 &  0.0851835 & 1.0      \\
+ -0.420784  & 1.0    &    0.105651 \\
+  1.0     &  -0.186757 &  0.0595105 \\
+\end{bmatrix}
+ \]
+
+Donde los elementos de la diagonal de $D$ son las aproximaciones a los valores propios de $A$ y las columnas de $P$ son los vectores propios linealmente independientes de $A$.
+
+Para verificar la convergencia cuadrática del primer vector propio, veamos las razones calculadas como en los incisos c) del ejercicio 1.
+
+\begin{multicols}{3}
+\noindent
+$ r_{1} $ = \text{NaN} \\
+$ r_{2} $ = \text{NaN} \\
+$ r_{3} $ = \text{NaN} \\
+$ r_{4} $ = \text{NaN} \\
+$ r_{5} $ = \text{NaN} \\
+$ r_{6} $ = \text{NaN} \\
+$ r_{7} $ = \text{NaN} \\
+$ r_{8} $ = \text{NaN} \\
+$ r_{9} $ = \text{NaN} \\
+$ r_{10} $ = \text{NaN} \\
+$ r_{11} $ = \text{NaN} \\
+$ r_{12} $ = \text{NaN} \\
+$ r_{13} $ = \text{NaN} \\
+$ r_{14} $ = \text{NaN} \\
+$ r_{15} $ = \text{NaN} \\
+$ r_{16} $ = \text{NaN} \\
+$ r_{17} $ = \text{NaN} \\
+$ r_{18} $ = \text{NaN} \\
+$ r_{19} $ = \text{NaN} \\
+$ r_{20} $ = \text{NaN} \\
+$ r_{21} $ = \text{NaN} \\
+$ r_{22} $ = \text{NaN} \\
+$ r_{23} $ = \text{NaN}\\
+$ r_{24} $ = \text{NaN} \\
+$ r_{25} $ = \text{NaN} \\
+$ r_{26} $ = \text{NaN} \\
+$ r_{27} $ = \text{NaN} \\
+$ r_{28} $ = \text{NaN} \\
+$ r_{29} $ = \text{NaN} \\
+$ r_{30} $ = \text{NaN} \\
+\end{multicols}
+
+El hecho de que todas sean \text{NaN} nos indica que la convergencia es cuadrática.
+\\
+\\
+
+\noindent
+\textbf{Ejercicio 4}
+
+\noindent
+El método de la potencia que implementamos no funciona con la matriz
+
+$$
+A =
+\begin{bmatrix}
+ \ 1 & -4 & -6 \ \\
+-12 & -8 & -6 \ \\
+ \ 11 & 10 & 10 \ \\
+\end{bmatrix}
+$$
+porque, como se muestra a continuación, no tiene un valor propio dominante, dado que el de mayor magnitud es complejo y, por tanto, viene con su conjugado, que tiene la misma magnitud. Los siguientes valores propios se calcularon con el método de Julia para aproximar valores propios.
+$$
+\begin{bmatrix}
+ -2.76311 & 0 & 0 \\
+ 0 & 2.88155-2.76057i & 0 \\
+ 0 & 0 & 2.88155+2.76057i
+\end{bmatrix}
+$$
+\\
+\\
+
+\noindent
+\textbf{Ejercicio 5}
+
+
+\noindent
+A continuación se comparan los métodos QR simple y QR con shifts dinámicos implementados por nosotros con el método de Julia para calcular valores y vectores propios. Los vectores $\textbf{v}$ tienen como entradas a los valores propios de $A$, las matrices $P$ son matrices cuyas columnas son los vectores propios de $A$ y $n$ es el número de iteraciones:
+\\
+\\
+
+El método QR simple dio como resultados
+\[
+ \textbf{v} =
+ \begin{bmatrix}
+v
+\end{bmatrix}
+ \qquad\text{ }\qquad
+P =
+ \begin{bmatrix}
+p
+\end{bmatrix}
+ \]
+
+ $$n = 0$$
+
+El método QR con shifts dinámicos dio como resultados
+\[
+ \textbf{v} =
+ \begin{bmatrix}
+v
+\end{bmatrix}
+ \qquad\text{ }\qquad
+P =
+ \begin{bmatrix}
+p
+\end{bmatrix}
+ \]
+
+ $$n = 67$$
+
+El método de Julia dio como resultados
+\[
+ \textbf{v} =
+ \begin{bmatrix}
+v
+\end{bmatrix}
+ \qquad\text{ }\qquad
+P =
+ \begin{bmatrix}
+p
+\end{bmatrix}
+ \]
+\\
+\\
+
+\noindent
+\textbf{Ejercicio 6}
+
+\noindent
+Con las aristas unidireccionales, la probabilidad de terminar en la página 0 converge a 0.3. Si se cambian las aristas unidireccionales por aristas bidireccionales, la distribución estacionaria no cambia porque, intuitivamente, como todos
+los estados eran ya positivos recurrentes, no añadimos ninguna posibilidad
+de 'atorarnos' ni logramos 'entrar a algo nuevo'. De hecho, la cadena
+original ya era irreducible.
+
+
+\noindent
+
+
+
+\end{document}
+
+ \\
