@@ -33,12 +33,17 @@ display(Λ)
 en el ejercicio 1, de nuevo siendo m el número de razones a calcular =#
 m = 30
 v = V[1:n, n]
-q₁, λ = metodo_potencia(A, q₀, ε);
+q₁, λ = metodo_potencia(A, q₀, ε, 1);
 i = 1
 while i <= m
-    q₂, λ = metodo_potencia(A, q₁, ε);
+    q₂, λ = metodo_potencia(A, q₁, ε, 1);
     r = norm(q₂ - v, Inf) / norm(q₁ - v, Inf)^2;
     display("la razón $i es $r")
     q₁ = q₂
     i += 1
 end
+
+#Y la razón teórica sería
+λ₁ = elem_max(Λ);
+λ₂ = second_largest(sort(Λ, rev = true));
+abs(λ₂/ λ₁) ^ 2
