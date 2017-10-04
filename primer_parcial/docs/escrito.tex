@@ -28,7 +28,7 @@ El problema de encontrar eigenvalores/eigenvectores (valores y vectores propios)
 
 El problema de encontrar valores y vectores propios es relevante ya que, al resolverlo, se puede comprimir información, hacer análisis de componentes principales, resolver ciertos sistemas de ecuaciones diferenciales y reducir la complejidad de varios problemas del álgebra lineal. Considerando que muchos problemas del mundo real se pueden simular usando una aproximación matricial, el encontrar los valores y vectores propios de una matriz es un problema muy importante en las matemáticas computacionales modernas.
 
-Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor propio de $A$, con vector propio asociado cualquier vector no cero que resuelva la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$, y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$. Además, obtener el determinante de una matriz es un proceso computacionalmente caro ($O(n^3)$), y numéricamente inestable.
+Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor propio de $A$, con vector propio asociado cualquier vector no cero que resuelva la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$, y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$. Además, obtener el polinomio caracteríztico de una matriz es un proceso computacionalmente (al menos $O(n^3)$), y numéricamente inestable.
 
 Por lo tanto, se vuelve necesario encontrar una forma de aproximar los valores y vectores propios de una manera numéricamente estable y con una complejidad aceptable. Para ello, estudiamos principalmente dos algoritmos: el método de la potencia y el algoritmo QR.
 
