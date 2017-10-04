@@ -14,119 +14,69 @@
 \usepackage{multicol}
 
 \begin{document}
-\author{Saúl Adrián Álvarez Tapia \and
-	Carlos Eduardo Gil Mezta \and
-	Jorge Antonio Rotter Vallejo \and
-	Sergio de Jesús Arnaud Gómez}
+\author{Saúl Adrián Álvarez Tapia \and Carlos Eduardo Gil Mezta \and Jorge Antonio Rotter Vallejo \and Sergio de Jesús Arnaud Gómez}
 
-\title{\Huge Práctica 1: Valores y vectores propios}
+\title{\Huge Práctica 1 de Cálculo Numérico: Valores y vectores propios}
 \date{}
 \maketitle
 
 \noindent
-\textbf{\LARGE{Sección 1}}
+\textbf{\LARGE{Introducción}}
 
 \noindent
-El problema de encontrar eigenvalores/eigenvectores (vaps/veps) de una matriz
-$A\in K^{n\times n}$ consiste en encontrar $\rho \in K$,  $v\in K^n\setminus\{0\}$
-tales que $Av=\rho v$. En este caso, se dice que $(\rho,v)$ es una pareja
-eigenvalor/eigenvector de $A$. Toda matriz tiene a lo más $n$ parejas vap/vep
-con sus vectores propios linealmente independientes, y en caso de que $K=\mathbb{C}$,
-toda matriz tiene al menos una pareja vap/vep.
+El problema de encontrar eigenvalores/eigenvectores (valores y vectores propios) de una matriz $A\in K^{n\times n}$ consiste en encontrar $\rho \in K$, $v\in K^n\setminus\{0\}$ tales que $Av=\rho v$. En este caso, se dice que $(\rho,v)$ es una pareja eigenvalor/eigenvector de $A$. Toda matriz tiene a lo más $n$ parejas de valor y vector propio con sus vectores propios linealmente independientes, y en caso de que $K=\mathbb{C}$, toda matriz tiene al menos una pareja de valor y vector propio.
 
-El problema de encontrar vaps/veps es relevante ya que, al resolverlo, se puede
-comprimir información, hacer análisis de componentes principales, resolver ciertos
-sistemas de ecuaciones diferenciales y reducir la complejidad de varios problemas
- del álgebra lineal. Considerando que muchos problemas del mundo real se pueden
- simular usando una aproximación matricial, el encontrar los vaps/veps de una
- matriz es un problema muy importante en las matemáticas computacionales modernas.
+El problema de encontrar valores y vectores propios es relevante ya que, al resolverlo, se puede comprimir información, hacer análisis de componentes principales, resolver ciertos sistemas de ecuaciones diferenciales y reducir la complejidad de varios problemas del álgebra lineal. Considerando que muchos problemas del mundo real se pueden simular usando una aproximación matricial, el encontrar los valores y vectores propios de una matriz es un problema muy importante en las matemáticas computacionales modernas.
 
-Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor
-propio de $A$, con vector propio asociado cualquier vector no cero que resuelva
-la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$,
-y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$.
-Además, obtener el determinante de una matriz es un proceso computacionalmente
-caro ($O(n^3)$), y numéricamente inestable.
+Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor propio de $A$, con vector propio asociado cualquier vector no cero que resuelva la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$, y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$. Además, obtener el determinante de una matriz es un proceso computacionalmente caro ($O(n^3)$), y numéricamente inestable.
 
-Por lo tanto, se vuelve necesario encontrar una forma de aproximar los vaps/veps
-de una manera numéricamente estable y con una complejidad aceptable. Para ello,
-estudiamos principalmente dos algoritmos: el método de la potencia y el algoritmo QR.
+Por lo tanto, se vuelve necesario encontrar una forma de aproximar los valores y vectores propios de una manera numéricamente estable y con una complejidad aceptable. Para ello, estudiamos principalmente dos algoritmos: el método de la potencia y el algoritmo QR.
 
-El método de la potencia funciona bajo el principio de que si hay un vap
-$\lambda_1$ dominante (es decir, que para cualquier otro vap $\mu$ de $A$,
-$|\lambda_1|>|\mu|$), entonces, para casi cualquier vector $v$, la secuencia
-\[
-	\dfrac{v}{||v||},\dfrac{Av}{||Av||},\dots,\dfrac{A^kv}{||A^kv||}
-\]
-converge a $v_1$, con $Av_1=\lambda_1v_1$. El método de la potencia consiste en
-generar esta secuencia hasta que se pueda decir que convergimos.
-Este método converge linealmente con razón $\dfrac{|\lambda_2|}{|\lambda_1|}$,
-donde $\lambda_2$ es el vap de mayor magnitud después de $\lambda_1$.
+El método de la potencia funciona bajo el principio de que si hay un valor propio $\lambda_1$ dominante (es decir, que para cualquier otro valor propio $\mu$ de $A$, $|\lambda_1|>|\mu|$), entonces, para casi cualquier vector $v$, la secuencia $$\dfrac{v}{||v||},\dfrac{Av}{||Av||},\dots,\dfrac{A^kv}{||A^kv||}$$ converge a $v_1$, con $Av_1=\lambda_1v_1$. El método de la potencia consiste en generar esta secuencia hasta que se pueda decir que convergimos. El algoritmo converge linealmente con razón $\dfrac{|\lambda_2|}{|\lambda_1|}$, donde $\lambda_2$ es el valor propio de mayor magnitud después de $\lambda_1$.
 
-Este método tiene ciertos problemas. Por ejemplo, si no hay un vap dominante,
-la secuencia no convergerá. Si hay un vap dominante, pero no muy dominante
-(es decir, existe $\mu$ vap de $A$ tal que $|\mu|\approx |\lambda_1|$), entonces
-el método de la potencia convergerá lentamente. Por otra parte, el método de la
-potencia sólo puede encontrar el vap de mayor magnitud, así que si queremos
-encontrar todas las parejas vap/vep, este no es el camino.
+Este proceso tiene algunos problemas. Por ejemplo, si no hay un valor propio dominante, la secuencia no convergerá. Si hay un valor propio dominante, pero no muy dominante (es decir, existe $\mu$ valor propio de $A$ tal que $|\mu|\approx |\lambda_1|$), entonces el método de la potencia convergerá lentamente. Por otra parte, el método de la potencia sólo puede encontrar el valor propio de mayor magnitud, así que si queremos encontrar todas las parejas de valor y vector propio, este no es el camino.
 
-Existen ciertas modificaciones a este método que hacen que pueda encontrar vaps
-distintas a la de mayor magnitud. Estas se basan principalmente en que para toda
-matriz $A$ invertible, si $\lambda$ es vap de $A$, entonces $1/\lambda$ es vap
-de $A^{-1}$, y que para toda matriz, si $\lambda$ es vap de $A$, entonces
-$\lambda-\mu$ es vap de $A-\mu I$. Usando estas propiedades, podemos encontrar
-más vaps/veps. Estas modificaciones generan el método de la potencia inversa
-con shift. Sin embargo, siguen teniendo convergencia lineal.
+Existen modificaciones que permiten encontrar valores propios distintos al de mayor magnitud. Estas se basan principalmente en que para toda matriz $A$ invertible, si $\lambda$ es valor propio de $A$, entonces $1/\lambda$ es valor propio de $A^{-1}$, y que para toda matriz, si $\lambda$ es valor propio de $A$, entonces $\lambda-\mu$ es valor propio de $A-\mu I$. Usando estas propiedades, podemos encontrar más valores y vectores propios. Estas modificaciones generan el método de la potencia inversa con shift. Sin embargo, siguen teniendo convergencia lineal.
 
-Existe una modificación, basada en coeficientes de Rayleigh, que puede buscar
-vaps arbitrarios, y que además converge cuadráticamente.
+Usando el cociente de Rayleigh, que puede buscar valores propios arbitrarios, y que además converge cuadráticamente.
 
-En este laboratorio, implementamos el método de la potencia regular, el método
-de la potencia inversa con shift y el método de Rayleigh.
+En este laboratorio, implementamos el método de la potencia regular, el método de la potencia inversa con shift y el método de Rayleigh.
 
-El algoritmo QR se basa en los mismos principios que el método de la potencia.
-Sin embargo, con este método podemos encontrar todos los vaps/veps de una matriz
-simultáneamente ya que el algoritmo QR usa el hecho de que los veps de distintos
-vaps son linealmente independientes.
+El algoritmo QR se basa en los mismos principios que el método de la potencia. Sin embargo, con este método podemos encontrar todos los valores y vectores propios de una matriz simultáneamente ya que el algoritmo QR usa el hecho de que los vectores propios de distintos valores propios son linealmente independientes.
 
-El método QR consiste en que a partir de la matriz inicial $A$, obtener su
-factorización $QR$, donde $Q$ es ortonormal y $R$ triangular superior. Luego, se
-genera la matriz $RQ=Q*AQ$, que es similar a $A$. Por un teorema visto en clase,
-al repetir este proceso esta matriz converge a una matriz triangular superior,
-de la cuál el determinante es fácil de calcular, y por lo tanto, los vaps también.
+El método QR consiste en que a partir de la matriz inicial $A$, obtener su factorización $QR$, donde $Q$ es ortonormal y $R$ triangular superior. Luego, se genera la matriz $RQ=Q*AQ$, que es similar a $A$. Por un teorema visto en clase, al repetir este proceso esta matriz converge a una matriz triangular superior, cuyos valores propios son las entradas en la diagonal.
 
-La convergencia del algoritmo QR es lineal, y su complejidad no es muy buena.
-Sin embargo, haciendo unos pequeños trucos, como empezar usando la factorización
-de Hessenberg de A o usando shifts apropiados durante la QR, su convergencia se
-acelera radicalmente.
+La convergencia del algoritmo QR es lineal, y su complejidad no es muy buena. Sin embargo, haciendo unos pequeños trucos, como empezar usando la factorización de Hessenberg de A o usando shifts apropiados durante la QR, su convergencia se acelera radicalmente.
 
-Por otra parte, el algoritmo QR es numéricamente muy estable, ya que sólo
-manipula matrices ortonormales.
+Por otra parte, el algoritmo QR es numéricamente muy estable, ya que sólo manipula matrices ortonormales.
 
-El algoritmo QR es el método predilecto para los problemas actuales de vaps/veps.
+El algoritmo QR es el método predilecto para los problemas actuales de valores y vectores propios.
 
 Nosotros implementamos tanto el método QR clásico como el método QR dinámico.
 \\
 \\
 \noindent
-\textbf{\LARGE{Sección 2}}
+\textbf{\LARGE{Implementación}}
 
 \noindent
-La principal diferencia de nuestro trabajo con lo visto en clase es el uso de
-Julia, un lenguaje de programación aún poco utilizado. Fuera de eso, las
-particularidades de nuestro código son las siguientes:
+La principal diferencia de nuestro trabajo con lo visto en clase es el uso de Julia,
+un lenguaje de programación aún poco utilizado. Cabe aclarar que utilizamos dos
+librerías adicionales a la base de Julia: Distritbutions en el ejercicio 6 y
+MatrixDepot en el ejercicio 5. En ambos casos, la primera línea de cada ejercicio
+(que dejamos comentada) instala la librería adecuada.
+Fuera de eso, las particularidades de nuestro código son las siguientes:
 
 \begin{itemize}
-	\item El método de la potencia-Rayleigh tiene como condición de finalización
-		alternativa a superar el número de iteraciones el que la matriz $A-\rho I$,
-		donde $\rho$ es el shift de Rayleigh actual, sea singular.
+	\item El método de la potencia-Rayleigh tiene como condición de finalización alternativa a superar el número de iteraciones el que la matriz $A-\rho I$, donde $\rho$ es el shift de Rayleigh actual, sea singular.
 	\item Para los métodos QR, usamos factorización de Hessenberg.
 	\item Para el método QR dinámico, usamos shift de Wilkinson.
+
 \end{itemize}
 
 \\
+\\
 \noindent
-\textbf{\LARGE{Sección 3}}
+\textbf{\LARGE{Resultados y discusión}}
 \\
 \noindent
 \textbf{Ejercicio 1}
@@ -157,6 +107,7 @@ con el vector inicial $\textbf{q}_0 =
 \end{bmatrix}
  \]
  \\
+ \\
 
 b) El método de Julia para calcular valores y vectores propios dio como resultados:
 \[
@@ -169,6 +120,7 @@ b) El método de Julia para calcular valores y vectores propios dio como resulta
 \end{bmatrix}
  \]
  \\
+ \\
 
  c) Normalizando $\textbf{v}_1$, obtenemos:
  $$\frac{\textbf{v}1}{||\textbf{v}_1||\infty} =
@@ -178,8 +130,10 @@ b) El método de Julia para calcular valores y vectores propios dio como resulta
 -0.1867572372227279
 \end{bmatrix}$$
 \\
+\\
 
 Notemos que, salvo por un factor constante, el vector propio $\textbf{v}$ calculado con el método de la potencia es igual al vector propio $\textbf{v}_1$ calculado por Julia.
+\\
 \\
 
 Ahora, veamos las razones
@@ -210,26 +164,16 @@ $r_{17}$ = 0.4092607095659459 \\
 $r_{18}$ = 0.4089849081976997 \\
 $r_{19}$ = 0.4083102111249005 \\
 $r_{20}$ = 0.40665590279039 \\
-$r_{21}$ = 0.40257643286687966 \\
-$r_{22}$ = 0.3923733704922536 \\
-$r_{23}$ = 0.365925821340209 \\
-$r_{24}$ = 0.29050437096565 \\
-$r_{25}$ = 0.0 \\
-$r_{26}$ = \text{Inf} \\
-$r_{27}$ = 1.40945153934118 \\
-$r_{28}$ = 1.1189479390636417 \\
-$r_{29}$ = 1.0435261697672753 \\
-$r_{30}$ = 1.017078113799665 \\
 \end{multicols}
 
 
 
-d) La norma teórica es:
+d) La razón teórica es:
 $$
 \left| \frac{\lambda_2}{\lambda_1} \right| = 0.40945181373495726
 $$
 
-y vemos que las normas en los incisos c) y d) son esencialmente iguales, salvo por errores de aproximación numérica.
+y vemos que las razones en los incisos c) y d) son esencialmente iguales.
 \\
 
 \noindent
@@ -306,26 +250,16 @@ $ r_{17} $ = 0.35798706917444434 \\
 $ r_{18} $ = 0.3579471303382953 \\
 $ r_{19} $ = 0.3578358216405784 \\
 $ r_{20} $ = 0.3575248065699232 \\
-$ r_{21} $ = 0.35665450883842625 \\
-$ r_{22} $ = 0.35421104981574186 \\
-$ r_{23} $ = 0.34728653885535626 \\
-$ r_{24} $ = 0.3271338277321181 \\
-$ r_{25} $ = 0.2636279367426734  \\
-$ r_{26} $ = 0.0 \\
-$ r_{27} $ = \text{Inf} \\
-$ r_{28} $ = 1.35800921553137  \\
-$ r_{29} $ = 1.0943812412338012 \\
-$ r_{30} $ = 1.0308752327746742 \\
 \end{multicols}
 
 
 
-d) La norma teórica es:
+d) La razón teórica es:
 $$
 \left| \frac{\lambda_n}{\lambda_{n-1}} \right| = 0.35800909831776423
 $$
 
-y vemos que las normas en los incisos c) y d) son esencialmente iguales, salvo por errores de aproximación numérica.
+y vemos que las razones en los incisos c) y d) son esencialmente iguales.
 \\
 \\
 
@@ -387,29 +321,6 @@ $ r_{4} $ = 0.013498249340114093 \\
 $ r_{5} $ = 0.039384710051032855 \\
 $ r_{6} $ = 0.0 \\
 $ r_{7} $ = \text{Inf} \\
-$ r_{8} $ = 1.0379310344827586 \\
-$ r_{9} $ = 1.0010797342192692 \\
-$ r_{10} $ = 1.0000829668962083 \\
-$ r_{11} $ = 1.0 \\
-$ r_{12} $ = 1.0 \\
-$ r_{13} $ = 1.0 \\
-$ r_{14} $ = 1.0 \\
-$ r_{15} $ = 1.0 \\
-$ r_{16} $ = 1.0 \\
-$ r_{17} $ = 1.0 \\
-$ r_{18} $ = 1.0 \\
-$ r_{19} $ = 1.0 \\
-$ r_{20} $ = 1.0 \\
-$ r_{21} $ = 1.0 \\
-$ r_{22} $ = 1.0 \\
-$ r_{23} $ = 1.0 \\
-$ r_{24} $ = 1.0 \\
-$ r_{25} $ = 1.0 \\
-$ r_{26} $ = 1.0 \\
-$ r_{27} $ = 1.0 \\
-$ r_{28} $ = 1.0 \\
-$ r_{29} $ = 1.0 \\
-$ r_{30} $ = 1.0 \\
 \end{multicols}
 
 
@@ -419,8 +330,10 @@ $$
 \left| \frac{\lambda_n}{\lambda_{n-1}} \right| = 0.03481539865981832
 $$
 
-y vemos que las normas en los incisos c) y d) son esencialmente iguales, salvo por errores de aproximación numérica.
-
+Aquí recalcamos que por la convergencia rápida del algoritmo, en la séptima
+iteración ya no hay diferencia (a 16 cifras) entre ambos vectores. De aquí el
+cero y luego el valor Inf (división entre cero). No incluímos las razones
+siguientes porque ya no dan información útil.
 \noindent
 \\
 \\
@@ -464,30 +377,8 @@ $ r_{3} $ = \text{NaN} \\
 $ r_{4} $ = \text{NaN} \\
 $ r_{5} $ = \text{NaN} \\
 $ r_{6} $ = \text{NaN} \\
-$ r_{7} $ = \text{NaN} \\
-$ r_{8} $ = \text{NaN} \\
-$ r_{9} $ = \text{NaN} \\
-$ r_{10} $ = \text{NaN} \\
-$ r_{11} $ = \text{NaN} \\
-$ r_{12} $ = \text{NaN} \\
-$ r_{13} $ = \text{NaN} \\
-$ r_{14} $ = \text{NaN} \\
-$ r_{15} $ = \text{NaN} \\
-$ r_{16} $ = \text{NaN} \\
-$ r_{17} $ = \text{NaN} \\
-$ r_{18} $ = \text{NaN} \\
-$ r_{19} $ = \text{NaN} \\
+$ \vdots $ \\
 $ r_{20} $ = \text{NaN} \\
-$ r_{21} $ = \text{NaN} \\
-$ r_{22} $ = \text{NaN} \\
-$ r_{23} $ = \text{NaN}\\
-$ r_{24} $ = \text{NaN} \\
-$ r_{25} $ = \text{NaN} \\
-$ r_{26} $ = \text{NaN} \\
-$ r_{27} $ = \text{NaN} \\
-$ r_{28} $ = \text{NaN} \\
-$ r_{29} $ = \text{NaN} \\
-$ r_{30} $ = \text{NaN} \\
 \end{multicols}
 
 El hecho de que todas sean \text{NaN} nos indica que la convergencia es cuadrática.
@@ -577,11 +468,12 @@ p
 \textbf{Ejercicio 6}
 
 \noindent
-Con las aristas unidireccionales, la probabilidad de terminar en la página 0 converge a 0.3. Si se cambian las aristas unidireccionales por aristas bidireccionales, la distribución estacionaria no cambia porque, intuitivamente, como todos
-los estados eran ya positivos recurrentes, no añadimos ninguna posibilidad
-de 'atorarnos' ni logramos 'entrar a algo nuevo'. De hecho, la cadena
-original ya era irreducible.
-
+Con las aristas unidireccionales, el ranking de Google (interpretado en norma
+1 para ser probabilidades) converge a 0.3.
+Añadiendo más "aristas" (haciéndolas bidireccionales) no estamos haciendo
+cambios significativos cuando n se va a infinito, pues de cualquier manera
+el nodo cero tiene más conexiones que todos los demás y es más probable
+acabar en él.
 
 \noindent
 

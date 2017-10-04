@@ -1,3 +1,4 @@
+#Pkg.add("Distributions")
 include("lib/google_matrix.jl")
 include("lib/power_method.jl")
 

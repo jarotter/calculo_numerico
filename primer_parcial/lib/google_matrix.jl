@@ -1,4 +1,3 @@
-#Pkg.add("Distributions")
 using(Distributions)
 
 function crear_matriz_adyacencia(n, p)
