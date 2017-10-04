@@ -46,4 +46,4 @@ end
 #Y la razón teórica sería
 λ₁ = elem_max(Λ);
 λ₂ = second_largest(sort(Λ, rev = true));
-abs(λ₂/ λ₁) ^ 2
+abs(λ₂/ λ₁)
