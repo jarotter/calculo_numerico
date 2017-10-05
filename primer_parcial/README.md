@@ -1,4 +1,4 @@
-#Práctica 1: Valores y vectores propios
+# Práctica 1: Valores y vectores propios
 
 El repositorio contiene los seis ejercicios indicados en la práctica 1 de
 Cálculo Numérico en el ITAM (otoño 2017).
@@ -14,7 +14,9 @@ particularidades de nuestro proyecto:
 -El método de la potencia-Rayleigh tiene como condición de finalización
 alternativa a superar el número de iteraciones el que la matriz $A-\rho I$,
 donde $\rho$ es el shift de Rayleigh actual, sea singular.
+
 -Para los métodos QR, usamos factorización de Hessenberg.
+
 -Para el método QR dinámico, usamos shift de Wilkinson.
 
 Todas las funciones auxiliares utilizadas están en la carpeta lib, y están
