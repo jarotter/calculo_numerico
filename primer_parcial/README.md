@@ -11,9 +11,9 @@ librería adecuada.
 Fuera del contenido estándar de la clase, queremos recalcar las siguientes
 particularidades de nuestro proyecto:
 
--El método de la potencia-Rayleigh tiene como condición de finalización
-alternativa a superar el número de iteraciones el que la matriz $A-\rho I$,
-donde $\rho$ es el shift de Rayleigh actual, sea singular.
+-El método de la potencia con cociente de Rayleigh tiene como condición de
+finalización alternativa a superar el número de iteraciones el que la matriz
+$A-\rho I$, donde $\rho$ es el shift de Rayleigh actual, sea singular.
 
 -Para los métodos QR, usamos factorización de Hessenberg.
 

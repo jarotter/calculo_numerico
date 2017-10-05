@@ -87,25 +87,33 @@ Nosotros implementamos tanto el método QR clásico como el método QR dinámico
 \\
 \noindent
 \textbf{\LARGE{Implementación}}
+El repositorio (https://github.com/jarotter/calculo_numerico.git) contiene los
+ seis ejercicios indicados en la práctica 1 de Cálculo Numérico en el ITAM
+ (otoño 2017).
 
-\noindent
-La principal diferencia de nuestro trabajo con lo visto en clase es el uso de Julia,
-un lenguaje de programación aún poco utilizado. Cabe aclarar que utilizamos dos
-librerías adicionales a la base de Julia: Distritbutions en el ejercicio 6 y
-MatrixDepot en el ejercicio 5. En ambos casos, la primera línea de cada ejercicio
-(que dejamos comentada) instala la librería adecuada.
-Fuera de eso, las particularidades de nuestro código son las siguientes:
+Para el proyecto utilizamos Julia, con sólo dos librerías adicionales a la base:
+Distritbutions en el ejercicio 6 y MatrixDepot en el ejercicio 5. En ambos
+casos, la primera línea de cada ejercicio (que dejamos comentada) instala la
+librería adecuada.
+
+Fuera del contenido estándar de la clase, queremos recalcar las siguientes
+particularidades de nuestro proyecto:
 
 \begin{itemize}
-	\item El método de la potencia-Rayleigh tiene como condición de finalización alternativa a superar el número de iteraciones el que la matriz $A-\rho I$, donde $\rho$ es el shift de Rayleigh actual, sea singular.
-	\item Para los métodos QR, usamos factorización de Hessenberg.
-	\item Para el método QR dinámico, usamos shift de Wilkinson.
+\item El método de la potencia-Rayleigh tiene como condición de finalización
+alternativa a superar el número de iteraciones el que la matriz
+$A-\rho I$, donde $\rho$ es el shift de Rayleigh actual, sea singular.
 
+\item Para los métodos QR, usamos factorización de Hessenberg.
+
+\item Para el método QR dinámico, usamos shift de Wilkinson.
 \end{itemize}
-
-\\
-\\
-\noindent
+Todas las funciones auxiliares utilizadas están en la carpeta lib, y están
+documentadas en Julia. Para acceder a su documentación, puede usarse ? func
+desde la terminal de Julia, donde func es el nombre de la función. Cada
+ejercicio tiene comentarios destinados a que los ejercicios sean autocontenidos,
+para evitar en la medida de lo posible cambiar entre el código y el 
+trabajo escrito.
 \textbf{\LARGE{Resultados y discusión}}
 \\
 \noindent
@@ -401,23 +409,22 @@ Para verificar la convergencia cuadrática del primer vector propio, veamos las 
 
 \begin{multicols}{3}
 \noindent
-$ r_{1} $ = \text{NaN} \\
-$ r_{2} $ = \text{NaN} \\
-$ r_{3} $ = \text{NaN} \\
-$ r_{4} $ = \text{NaN} \\
-$ r_{5} $ = \text{NaN} \\
-$ r_{6} $ = \text{NaN} \\
-$ \vdots $ \\
-$ r_{20} $ = \text{NaN} \\
+$ r_{1} $ = 0.08635778444044981 \\
+$ r_{2} $ = 1.584419192227463 \\
+$ r_{3} $ = 0.49289362960482147 \\
+$ r_{4} $ = 0.6746997204377666 \\
+$ r_{5} $ =  0.684807202146323 \\
+$ r_{6} $ = 0.0 \\
+$ r_{7} $ = \text{NaN} \\
 \end{multicols}
 
-Observemos que desde la segunda razón tenemos cero. Es decir, el algoritmo
-ya logró convergencia hacia un valor propio. Aunque la razón teórica es
-*\textbf{NO ME SÉ LA RAZÓN TEÓRICA PERO VE LOS COMENTARIOS NUEVOS}*, es tan
+Observemos que desde la sexta razón tenemos cero. Es decir, el algoritmo
+ya logró convergencia hacia un valor propio. Aunque la razón teórica sea $$
+\left| \frac{\lambda_n}{\lambda_{n-1}} \right| = 0.4094518137349568
+$$ es tan
 rápido que no podemos aproximarla.
 \\
 \\
-
 \noindent
 \textbf{Ejercicio 4}
 
@@ -448,61 +455,119 @@ $$
 
 
 \noindent
-A continuación se comparan los métodos QR simple y QR con shifts dinámicos
-implementados por nosotros con el método de Julia para calcular valores y
-vectores propios. Los vectores $\textbf{v}$ tienen como entradas a los valores
-propios de $A$, las matrices $P$ son matrices cuyas columnas son los vectores
-propios de $A$ y $n$ es el número de iteraciones:
+A continuación se comparan los métodos QR simple y QR con shifts dinámicos implementados por nosotros con el método de Julia para calcular valores propios. Los vectores $\textbf{v}$ tienen como entradas a los valores propios de $A$ y $n$ es el número de iteraciones:
 \\
 \\
-
-El método QR simple dio como resultados
-\[
+\begin{multicols}{3}
+\noindent
+El método QR simple dio como resultados:
+$$
  \textbf{v} =
  \begin{bmatrix}
-v
+216.73194654281997 \\
+-126.81827789682255 \\
+-40.0301574197931 \\
+-14.2402443490463 \\
+-8.499822670072632 \\
+-5.236067977499783 \\
+-3.766822029130399 \\
+-2.7580423738097717 \\
+-2.177499542899788 \\
+-1.7414906590978931 \\
+-1.4560662464312706 \\
+-1.2305894732043927 \\
+-1.0708938888510213 \\
+-0.9409191949161145 \\
+-0.8440426859973454 \\
+-0.7639320225002095 \\
+-0.702278178498368 \\
+-0.6511150888037952 \\
+-0.6111494859682925 \\
+-0.5783794940752632 \\
+-0.552973671851485 \\
+-0.5329619142946431 \\
+-0.518255221991412 \\
+-0.507979555928666 \\
+-0.5019855013356324 \\
 \end{bmatrix}
- \qquad\text{ }\qquad
-P =
- \begin{bmatrix}
-p
-\end{bmatrix}
- \]
+$$
+ $$n = 1000$$
 
- $$n = 1541$$
+\noindent
+El método QR con shifts dinámicos calculó:
 
-El método QR con shifts dinámicos dio como resultados
-\[
+$$
  \textbf{v} =
  \begin{bmatrix}
-v
+216.73194654282025 \\
+-126.81827789682264 \\
+-40.03015741979313 \\
+-14.240244349046273 \\
+-8.499822670072643 \\
+-5.236067977499788 \\
+-3.766822029130398 \\
+-2.7580423738097704 \\
+-2.177499542899792 \\
+-1.7414906590978905 \\
+-1.456066246431275 \\
+-1.2305894732043925 \\
+-1.07089388885102 \\
+-0.9409191949161126 \\
+-0.8440426859973459 \\
+-0.7639320225002109 \\
+-0.7022781784983658 \\
+-0.6511150888037956 \\
+-0.6111494859682942 \\
+-0.5783794940752622 \\
+-0.5529736718514865 \\
+-0.5329619142946429 \\
+-0.518255221991411 \\
+-0.50198550133501 \\
+-0.5079795559292898 \\
 \end{bmatrix}
- \qquad\text{ }\qquad
-P =
- \begin{bmatrix}
-p
-\end{bmatrix}
- \]
+$$
 
  $$n = 30$$
 
-El método de Julia dio como resultados
-\[
+\noindent
+El método de Julia dio como resultado:
+$$
  \textbf{v} =
  \begin{bmatrix}
-v
+216.7319465428201 \\
+-126.8182778968222 \\
+-40.03015741979337 \\
+-14.240244349046577 \\
+-8.499822670072746 \\
+-5.236067977499999 \\
+-3.7668220291304237 \\
+-2.758042373809843 \\
+-2.1774995428995965 \\
+-1.741490659097849 \\
+-1.4560662464313339 \\
+-1.230589473204317 \\
+-1.0708938888509496 \\
+-0.9409191949160169 \\
+-0.844042685997301 \\
+-0.7639320225001289 \\
+-0.702278178498337 \\
+-0.6511150888037579 \\
+-0.611149485968286 \\
+-0.5783794940751732 \\
+-0.5529736718513584 \\
+-0.5329619142945015 \\
+-0.5182552219913622 \\
+-0.507979555929172 \\
+-0.5019855013348997 \\
 \end{bmatrix}
- \qquad\text{ }\qquad
-P =
- \begin{bmatrix}
-p
-\end{bmatrix}
- \]
+$$
+
+\\
+\\
+\end{multicols}
 \\
 \\
 
-El shift dinámico logró convergencia en sólo 2\% de las iteraciones del
-método QR tradicional
 \noindent
 \textbf{Ejercicio 6}
 
@@ -513,6 +578,15 @@ Añadiendo más "aristas" (haciéndolas bidireccionales) no estamos haciendo
 cambios significativos cuando n se va a infinito, pues de cualquier manera
 el nodo cero tiene más conexiones que todos los demás y es más probable
 acabar en él.
+La matriz de Google es la representación de una cadena de Markov homogénea, donde
+la entrada $(i, j)$ puede interpretarse como la probabilidad de pasar de la
+página $i$ a la $j$ a través de un hipervínculo. En su construcción se compensa
+el hecho de que uno puede cambiar a cualquier otra página que no esté vinculada
+en la actual.
+Aunque el código sólo muestra n = 100, repetimos el proceso para n = 3, n = 10,
+n = 100 y n = 1000 (1000 tarda bastante tiempo) y en todos los casos se da la
+convergencia.
+
 
 \noindent
 
