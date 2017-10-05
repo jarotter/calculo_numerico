@@ -1,5 +1,14 @@
 using(Distributions)
 
+"""
+
+    crear_matriz_adyacencia(n, p)
+
+Crea una matriz de adyacencia de `n` × `n` donde cada
+entrada es uno o cero según un experimento Bernoulli de
+parámetro `p`.
+
+"""
 function crear_matriz_adyacencia(n, p)
     A = zeros((n,n))
     b = Bernoulli(p)e
@@ -9,6 +18,22 @@ function crear_matriz_adyacencia(n, p)
     end
     return A
 end
+
+"""
+
+    crear_matriz_google(A, q)
+
+A partir de una matriz de adyacencia `A`, crea la matriz
+de Google necesaria para ejecutar el algoritmo Pagerank.
+La matriz de Google que usamos es irreducible,
+aperiódica y estocástica por filas, y
+representa las probabilidades de pasar de la página i a la
+j pensado como estados en una cadena de Markov homogénea.
+
+El parámetro `q` compensa por el evento probable de que
+en cualquier momento el usuario cambie a una página aleatoria
+y no sólo a una con hipervínculo desde la actual.
+"""
 
 function crear_matriz_google(A, q)
     n = size(A)[1]

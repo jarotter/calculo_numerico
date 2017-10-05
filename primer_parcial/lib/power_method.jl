@@ -1,5 +1,22 @@
 include("aux.jl")
 
+"""
+
+    metodo_potencia(A, q₀, ε, max_iter = 100; var = "rayleigh", ρ = 0)
+
+Función genérica variaciones del método de la potencia. En todas, el
+parámetro `A` es la matriz sobre la cuál se trabaja,
+desde un vector inicial `q₀`, con tolerancia ε para
+calcular su valor propio principal.
+
+Pueden controlarse también las iteraciones con
+`max_iter`.
+
+El argumento `var` puede recibir "rayleigh" para el método
+de la potencia inversa con shift de Rayleigh, "classic"
+para el tradicional o "shift" para la potencia inversa
+con shift (el shift dado en el argumento `ρ`).
+"""
 function metodo_potencia(A, q₀, ε, max_iter = 100; var = "rayleigh", ρ = 0)
     if var == "classic"
         _potencia_classic(A, q₀, max_iter, ε)
