@@ -24,35 +24,65 @@
 \textbf{\LARGE{Introducción}}
 
 \noindent
-El problema de encontrar eigenvalores/eigenvectores (valores y vectores propios) de una matriz $A\in K^{n\times n}$ consiste en encontrar $\rho \in K$, $v\in K^n\setminus\{0\}$ tales que $Av=\rho v$. En este caso, se dice que $(\rho,v)$ es una pareja eigenvalor/eigenvector de $A$. Toda matriz tiene a lo más $n$ parejas de valor y vector propio con sus vectores propios linealmente independientes, y en caso de que $K=\mathbb{C}$, toda matriz tiene al menos una pareja de valor y vector propio.
+El problema de encontrar eigenvalores/eigenvectores (valores y vectores propios) de una matriz $A\in K^{n\times n}$ consiste en encontrar $\rho \in K$, $v\in K^n\setminus\{0\}$ tales que $Av=\rho v$. En este caso, se dice que $(\rho,v)$ es una pareja eigenvalor/eigenvector de $A$. Toda matriz tiene a lo más $n$ parejas de valores y vectores propios con sus vectores propios linealmente independientes, y en caso de que $K=\mathbb{C}$, toda matriz tiene al menos una pareja valor/vector propio.
+
+
 
 El problema de encontrar valores y vectores propios es relevante ya que, al resolverlo, se puede comprimir información, hacer análisis de componentes principales, resolver ciertos sistemas de ecuaciones diferenciales y reducir la complejidad de varios problemas del álgebra lineal. Considerando que muchos problemas del mundo real se pueden simular usando una aproximación matricial, el encontrar los valores y vectores propios de una matriz es un problema muy importante en las matemáticas computacionales modernas.
 
-Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor propio de $A$, con vector propio asociado cualquier vector no cero que resuelva la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$, y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$. Además, obtener el polinomio caracteríztico de una matriz es un proceso computacionalmente (al menos $O(n^3)$), y numéricamente inestable.
+
+
+Toda raíz del polinomio en $\lambda$ dado por $\det(A-\lambda I)$ es un valor propio de $A$, con vector propio asociado cualquier vector no cero que resuelva la ecuación $(A-\lambda I)v=0$. Sin embargo, este polinomio es de grado $n$, y por el teorema de Abel-Ruffini, no es resoluble analíticamente para $n\geq 5$. Además, obtener el polinomio característico de una matriz es un proceso computacional (al menos $O(n^3)$), y numéricamente inestable.
+
+
 
 Por lo tanto, se vuelve necesario encontrar una forma de aproximar los valores y vectores propios de una manera numéricamente estable y con una complejidad aceptable. Para ello, estudiamos principalmente dos algoritmos: el método de la potencia y el algoritmo QR.
 
+
+
 El método de la potencia funciona bajo el principio de que si hay un valor propio $\lambda_1$ dominante (es decir, que para cualquier otro valor propio $\mu$ de $A$, $|\lambda_1|>|\mu|$), entonces, para casi cualquier vector $v$, la secuencia $$\dfrac{v}{||v||},\dfrac{Av}{||Av||},\dots,\dfrac{A^kv}{||A^kv||}$$ converge a $v_1$, con $Av_1=\lambda_1v_1$. El método de la potencia consiste en generar esta secuencia hasta que se pueda decir que convergimos. El algoritmo converge linealmente con razón $\dfrac{|\lambda_2|}{|\lambda_1|}$, donde $\lambda_2$ es el valor propio de mayor magnitud después de $\lambda_1$.
 
-Este proceso tiene algunos problemas. Por ejemplo, si no hay un valor propio dominante, la secuencia no convergerá. Si hay un valor propio dominante, pero no muy dominante (es decir, existe $\mu$ valor propio de $A$ tal que $|\mu|\approx |\lambda_1|$), entonces el método de la potencia convergerá lentamente. Por otra parte, el método de la potencia sólo puede encontrar el valor propio de mayor magnitud, así que si queremos encontrar todas las parejas de valor y vector propio, este no es el camino.
+
+
+Este proceso tiene algunos problemas. Por ejemplo, si no hay un valor propio dominante, la secuencia no convergerá. Si hay un valor propio dominante, pero no muy dominante (es decir, existe $\mu$ valor propio de $A$ tal que $|\mu|\approx |\lambda_1|$), entonces el método de la potencia convergerá lentamente. Por otra parte, el método de la potencia sólo puede encontrar el valor propio de mayor magnitud, así que si queremos encontrar todas las parejas de valores y vectores propio, éste no es el camino.
+
+
 
 Existen modificaciones que permiten encontrar valores propios distintos al de mayor magnitud. Estas se basan principalmente en que para toda matriz $A$ invertible, si $\lambda$ es valor propio de $A$, entonces $1/\lambda$ es valor propio de $A^{-1}$, y que para toda matriz, si $\lambda$ es valor propio de $A$, entonces $\lambda-\mu$ es valor propio de $A-\mu I$. Usando estas propiedades, podemos encontrar más valores y vectores propios. Estas modificaciones generan el método de la potencia inversa con shift. Sin embargo, siguen teniendo convergencia lineal.
 
-Usando el cociente de Rayleigh, que puede buscar valores propios arbitrarios, y que además converge cuadráticamente.
+
+
+Usando el cociente de Rayleigh, se pueden buscar valores propios arbitrarios, con la ventaja de tener una convergencia cuadrática
+
+
 
 En este laboratorio, implementamos el método de la potencia regular, el método de la potencia inversa con shift y el método de Rayleigh.
 
+
+
 El algoritmo QR se basa en los mismos principios que el método de la potencia. Sin embargo, con este método podemos encontrar todos los valores y vectores propios de una matriz simultáneamente ya que el algoritmo QR usa el hecho de que los vectores propios de distintos valores propios son linealmente independientes.
+
+
 
 El método QR consiste en que a partir de la matriz inicial $A$, obtener su factorización $QR$, donde $Q$ es ortonormal y $R$ triangular superior. Luego, se genera la matriz $RQ=Q*AQ$, que es similar a $A$. Por un teorema visto en clase, al repetir este proceso esta matriz converge a una matriz triangular superior, cuyos valores propios son las entradas en la diagonal.
 
+
+
 La convergencia del algoritmo QR es lineal, y su complejidad no es muy buena. Sin embargo, haciendo unos pequeños trucos, como empezar usando la factorización de Hessenberg de A o usando shifts apropiados durante la QR, su convergencia se acelera radicalmente.
+
+
 
 Por otra parte, el algoritmo QR es numéricamente muy estable, ya que sólo manipula matrices ortonormales.
 
+
+
 El algoritmo QR es el método predilecto para los problemas actuales de valores y vectores propios.
 
+
+
 Nosotros implementamos tanto el método QR clásico como el método QR dinámico.
+
+
 \\
 \\
 \noindent
