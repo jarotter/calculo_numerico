@@ -3,7 +3,7 @@
 El repositorio contiene los seis ejercicios indicados en la práctica 1 de
 Cálculo Numérico en el ITAM (otoño 2017).
 
-Para el proyecto utilizamos Julia, con sólo dos librerías adicionales a la base:
+Para el proyecto utilizamos Julia (versión 0.6.0), con sólo dos librerías adicionales a la base:
 `Distritbutions` en el ejercicio 6 y `MatrixDepot` en el ejercicio 5. En ambos
 casos, la primera línea de cada ejercicio (que dejamos comentada) instala la
 librería adecuada.
