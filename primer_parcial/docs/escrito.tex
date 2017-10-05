@@ -448,7 +448,11 @@ $$
 
 
 \noindent
-A continuación se comparan los métodos QR simple y QR con shifts dinámicos implementados por nosotros con el método de Julia para calcular valores y vectores propios. Los vectores $\textbf{v}$ tienen como entradas a los valores propios de $A$, las matrices $P$ son matrices cuyas columnas son los vectores propios de $A$ y $n$ es el número de iteraciones:
+A continuación se comparan los métodos QR simple y QR con shifts dinámicos
+implementados por nosotros con el método de Julia para calcular valores y
+vectores propios. Los vectores $\textbf{v}$ tienen como entradas a los valores
+propios de $A$, las matrices $P$ son matrices cuyas columnas son los vectores
+propios de $A$ y $n$ es el número de iteraciones:
 \\
 \\
 
@@ -465,7 +469,7 @@ p
 \end{bmatrix}
  \]
 
- $$n = 0$$
+ $$n = 1541$$
 
 El método QR con shifts dinámicos dio como resultados
 \[
@@ -480,7 +484,7 @@ p
 \end{bmatrix}
  \]
 
- $$n = 67$$
+ $$n = 30$$
 
 El método de Julia dio como resultados
 \[
@@ -497,6 +501,8 @@ p
 \\
 \\
 
+El shift dinámico logró convergencia en sólo 2\% de las iteraciones del
+método QR tradicional
 \noindent
 \textbf{Ejercicio 6}
 
