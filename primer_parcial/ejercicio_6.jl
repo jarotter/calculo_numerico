@@ -19,6 +19,8 @@ end
 Gₐ = crear_matriz_google(A, 0.15);
 rₐ = metodo_potencia(Gₐ', q₀, 1e-10, var = "classic")[1]
 rₐ = rₐ / norm(rₐ, 1)
+#=Damos pagerank en norma uno para representar probabilidades en la distribución
+estacionaria de la cadena de Markov representada por Gₐ=#
 
 #La probabilidad de terminar en la página 0 converge a 0.3.
 
