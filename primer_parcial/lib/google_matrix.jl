@@ -37,14 +37,15 @@ y no sólo a una con hipervínculo desde la actual.
 
 function crear_matriz_google(A, q)
     n = size(A)[1]
-    K = A * ones(n) #Las sumas por renglón
+    B = A
+    K = B * ones(n) #Las sumas por renglón
 
     for j = 1:n
-        A[j, 1:n] = K[j] == 0 ? ones(n)/n : A[j, 1:n] / K[j]
+        B[j, 1:n] = K[j] == 0 ? ones(n)/n : B[j, 1:n] / K[j]
     end
 
     S = ones((n,n))/n
 
-    G = q*S + (1-q)*A
+    G = q*S + (1-q)*B
     return G
 end

@@ -38,7 +38,7 @@ i = 1
 while i <= m
     q₂, λ = metodo_potencia(A, q₁, ε, 1);
     r = norm(q₂ - v, Inf) / norm(q₁ - v, Inf)^2;
-    display("la razón $i es $r")
+    println("la razón $i es $r")
     q₁ = q₂
     i += 1
 end
