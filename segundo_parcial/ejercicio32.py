@@ -8,12 +8,12 @@ def correct_y(t0,y0,t):
     return y0*np.exp(t*t-t0*t0+2*(t-t0))
 
 # Ejercicio 3.2.1
-wT1=odes.explicitTrapeze(prime_y,t0=0,y0=1,stepSize=0.1,stepNum=10)
+wT1=odes.explicitTrapezoid(prime_y,t0=0,y0=1,stepSize=0.1,stepNum=10)
 errorT1=abs(wT1[-1]-correct_y(0,1,1))
 print('Error global de trapecio explícito en t=1 con h=1/10:',errorT1,'\n')
 
 # Ejercicio 3.2.2
-wT2=odes.explicitTrapeze(prime_y,t0=0,y0=1,stepSize=0.05,stepNum=20)
+wT2=odes.explicitTrapezoid(prime_y,t0=0,y0=1,stepSize=0.05,stepNum=20)
 errorT2=abs(wT2[-1]-correct_y(0,1,1))
 print('Error global de trapecio explícito en t=1 con h=1/20:',errorT2)
 

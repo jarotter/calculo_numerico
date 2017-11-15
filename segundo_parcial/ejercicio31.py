@@ -3,7 +3,7 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 
-def prime_y(t,y):
+def y_prime(t,y):
     return 2*(t+1)*y
 
 # Exercise 3.1.1
@@ -11,7 +11,7 @@ t0=0
 y0=1
 stepSize=0.1
 stepNum=10
-w=odes.explicitEuler(prime_y,t0=t0,y0=y0,stepSize=0.1,stepNum=10)
+w=odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=0.1,stepNum=10)
 print('Resultados de Euler explícito:')
 print(' t  |     w_t')
 for i in range(11):
@@ -36,7 +36,7 @@ print('Error máximo local:',maxError,'\n')
 h=[0.1*2**(-i) for i in range(6)]
 errors=[]
 for i in range(6):
-    errors.append(abs(correct_y(t0,y0,1)-odes.explicitEuler(prime_y,t0=t0,y0=y0,stepSize=h[i],stepNum=10*(2**i))[-1]))
+    errors.append(abs(correct_y(t0,y0,1)-odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*(2**i))[-1]))
 
 #for i in range(6):
     #errors[i]=np.log(errors[i])
@@ -59,7 +59,7 @@ plt.show()
 errors=[]
 for i in range(6):
     maxError=0
-    w=odes.explicitEuler(prime_y,t0=t0,y0=y0,stepSize=h[i],stepNum=10*2**(i))
+    w=odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*2**(i))
     for j in range(1,10*(2**i)):
         maxError=max(maxError,abs(correct_y(t0+(j-1)*h[i],w[j-1],t0+j*h[i])-w[j]))
 

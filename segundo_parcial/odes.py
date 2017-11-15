@@ -33,7 +33,7 @@ def explicitEuler_1D(func,t0,y0,stepSize=0.1,stepNum=50):
 
     return yValues
 
-def explicitTrapeze_1D(func,t0,y0,stepSize=0.1,stepNum=50):
+def explicitTrapezoid_1D(func,t0,y0,stepSize=0.1,stepNum=50):
     tValues=[t0+stepSize*i for i in range(stepNum+1)]
     yValues=[0 for i in range(stepNum+1)]
 
@@ -123,7 +123,7 @@ def explicitEuler_MD(func,t0,y0,stepSize=0.1,stepNum=50):
 
     return yValues
 
-def explicitTrapeze_MD(func,t0,y0,stepSize=0.1,stepNum=50):
+def explicitTrapezoid_MD(func,t0,y0,stepSize=0.1,stepNum=50):
     tValues=[t0+stepSize*i for i in range(stepNum+1)]
     yValues=[0 for i in range(stepNum+1)]
 
@@ -172,13 +172,13 @@ def explicitEuler(func,t0,y0,stepSize=0.1,stepNum=50):
     if (type(y0)==int) or (type(y0)==float): return explicitEuler_1D(func,t0,y0,stepSize,stepNum)
     else: return explicitEuler_MD(func,t0,y0,stepSize,stepNum)
 
-def explicitTrapeze(func,t0,y0,stepSize=0.1,stepNum=50):
+def explicitTrapezoid(func,t0,y0,stepSize=0.1,stepNum=50):
     # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
     # considering that the derivative of y equals func(t,y) and y0=y(t0)
-    # using trapeze explicit method
+    # using trapezoid explicit method
 
-    if (type(y0)==int) or (type(y0)==float): return explicitTrapeze_1D(func,t0,y0,stepSize,stepNum)
-    else: return explicitTrapeze_MD(func,t0,y0,stepSize,stepNum)
+    if (type(y0)==int) or (type(y0)==float): return explicitTrapezoid_1D(func,t0,y0,stepSize,stepNum)
+    else: return explicitTrapezoid_MD(func,t0,y0,stepSize,stepNum)
 
 def implicitEuler(func,t0,y0,stepSize=0.1,stepNum=50):
     # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
