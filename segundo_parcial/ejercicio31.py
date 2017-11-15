@@ -1,6 +1,7 @@
 import odes
 import numpy as np
 import scipy as sp
+import matplotlib.pyplot as plt
 
 def prime_y(t,y):
     return 2*(t+1)*y
@@ -37,15 +38,22 @@ errors=[]
 for i in range(6):
     errors.append(abs(correct_y(t0,y0,1)-odes.explicitEuler(prime_y,t0=t0,y0=y0,stepSize=h[i],stepNum=10*(2**i))[-1]))
 
-for i in range(6):
-    errors[i]=np.log(errors[i])
+#for i in range(6):
+    #errors[i]=np.log(errors[i])
 
-print('Log de los errores globales como función de k:')
-print('k | log de error')
-for i in range(6):
-    print(i,'|','{0:10f}'.format(errors[i]))
+# print('Log de los errores globales como función de k:')
+# print('k | log de error')
+# for i in range(6):
+#     print(i,'|','{0:10f}'.format(errors[i]))
+#
+# print()
 
-print()
+plt.loglog(h, errors, marker = '.')
+plt.xlabel('h')
+plt.ylabel('global error at 1')
+plt.title('Global error at ' r'$t=1$' + ' as function of ' + r'$h = 0.1×2^{-k}$')
+plt.savefig('plot31.eps', format = 'eps')
+plt.show()
 
 # Part 4
 errors=[]
