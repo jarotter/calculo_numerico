@@ -38,35 +38,25 @@ errors=[]
 for i in range(6):
     errors.append(abs(correct_y(t0,y0,1)-odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*(2**i))[-1]))
 
-#for i in range(6):
-    #errors[i]=np.log(errors[i])
-
-# print('Log de los errores globales como función de k:')
-# print('k | log de error')
-# for i in range(6):
-#     print(i,'|','{0:10f}'.format(errors[i]))
-#
-# print()
-
 plt.loglog(h, errors, marker = '.')
 plt.xlabel('h')
 plt.ylabel('global error at 1')
-plt.title('Global error at ' r'$t=1$' + ' as function of ' + r'$h = 0.1×2^{-k}$')
+plt.title('Global error at ' r'$t=1$' + ' as a function of ' + r'$h = 0.1×2^{-k}$')
+plt.grid(True)
 plt.savefig('plot31.eps', format = 'eps')
-plt.show()
 
 # Part 4
-errors=[]
+local_errors=[]
 for i in range(6):
     maxError=0
     w=odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*2**(i))
     for j in range(1,10*(2**i)):
         maxError=max(maxError,abs(correct_y(t0+(j-1)*h[i],w[j-1],t0+j*h[i])-w[j]))
 
-    errors.append(maxError)
+    local_errors.append(maxError)
 
 print('k |   paso   | máximo de los errores locales del método de Euler | eoc')
 for i in range(5):
-    print(i,'|','{0:.6f}'.format(h[i]),'|                 ','{0:.13f}'.format(errors[i]),'                 |','{0:.10f}'.format(np.log(errors[i+1]/errors[i])/np.log(h[i+1]/h[i])))
+    print(i,'|','{0:.6f}'.format(h[i]),'|                 ','{0:.13f}'.format(local_errors[i]),'                 |','{0:.10f}'.format(np.log(errors[i+1]/errors[i])/np.log(h[i+1]/h[i])))
 
-print(5,'|','{0:.6f}'.format(h[5]),'|                 ','{0:.13f}'.format(errors[5]),'                 |','------------')
+print(5,'|','{0:.6f}'.format(h[5]),'|                 ','{0:.13f}'.format(local_errors[5]),'                 |','------------')
