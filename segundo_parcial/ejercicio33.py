@@ -9,8 +9,8 @@ def y_prime(t,y1,y2):
     return np.array([-y1+y2,-y1-y2])
 
 # Ejercicio 3.3.1
-w10=odes.midpointMethod(y_prime,t0=0,y0=np.array([0,1]),stepSize=0.1,stepNum=10)
-w100=odes.midpointMethod(y_prime,t0=0,y0=np.array([0,1]),stepSize=0.01,stepNum=100)
+w10=odes.midpoint_method(y_prime,t0=0,y0=np.array([0,1]),step_size=0.1,step_num=10)
+w100=odes.midpoint_method(y_prime,t0=0,y0=np.array([0,1]),step_size=0.01,step_num=100)
 
 print('Error global para método del punto medio con h=1/10:',np.linalg.norm(w10[-1]-exact_solution(1), np.inf))
 print('Error global para método del punto medio con h=1/100:',np.linalg.norm(w100[-1]-exact_solution(1), np.inf))

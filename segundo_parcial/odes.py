@@ -1,18 +1,18 @@
 import numpy as np
 
-def derivate(func,x0,h=1e-6):
+def derivative(func,x0,h=1e-6):
     # Approximates the derivative of func at x0
 
     return (func(x0+h)-func(x0-h))/(2*h)
 
-def newtonSolve(func,val,tol=1e-15):
+def newton_solve(func,val,tol=1e-15):
     # Approximates a root of function func with initial approximation val
     # using Newton's method
 
     prevval=val
     for i in range(100):
-        while abs(derivate(func,val))<1e-10: val=val+0.1
-        val=val-func(val)/derivate(func,val)
+        while abs(derivative(func,val))<1e-10: val=val+0.1
+        val=val-func(val)/derivative(func,val)
 
 
         if abs(prevval-val)<tol: return val
@@ -23,68 +23,68 @@ def newtonSolve(func,val,tol=1e-15):
 ###############################################################################
 
 
-def explicitEuler_1D(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
+def explicit_euler_1d(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
 
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        yValues[i]=yValues[i-1]+stepSize*func(tValues[i-1],yValues[i-1])
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        y_values[i]=y_values[i-1]+step_size*func(t_values[i-1],y_values[i-1])
 
-    return yValues
+    return y_values
 
-def explicitTrapezoid_1D(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
+def explicit_trapezoid_1D(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
 
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        nextYAprox=yValues[i-1]+stepSize*func(tValues[i-1],yValues[i-1])
-        yValues[i]=yValues[i-1]+stepSize*(func(tValues[i-1],yValues[i-1])+func(tValues[i],nextYAprox))/2
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        nextYAprox=y_values[i-1]+step_size*func(t_values[i-1],y_values[i-1])
+        y_values[i]=y_values[i-1]+step_size*(func(t_values[i-1],y_values[i-1])+func(t_values[i],nextYAprox))/2
 
-    return yValues
+    return y_values
 
-def midpointMethod_1D(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
+def midpoint_method_1D(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
 
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        m=yValues[i-1]+stepSize*func(tValues[i-1],yValues[i-1])/2
-        yValues[i]=yValues[i-1]+stepSize*func(tValues[i-1]+stepSize/2,m)
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        m=y_values[i-1]+step_size*func(t_values[i-1],y_values[i-1])/2
+        y_values[i]=y_values[i-1]+step_size*func(t_values[i-1]+step_size/2,m)
 
-    return yValues
+    return y_values
 
-def RK4_1D(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
+def rk4_1D(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
 
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        k1=func(tValues[i-1],yValues[i-1])
-        k2=func(tValues[i-1]+stepSize/2,yValues[i-1]+stepSize*k1/2)
-        k3=func(tValues[i-1]+stepSize/2,yValues[i-1]+stepSize*k2/2)
-        k4=func(tValues[i],yValues[i-1]+stepSize*k3)
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        k1=func(t_values[i-1],y_values[i-1])
+        k2=func(t_values[i-1]+step_size/2,y_values[i-1]+step_size*k1/2)
+        k3=func(t_values[i-1]+step_size/2,y_values[i-1]+step_size*k2/2)
+        k4=func(t_values[i],y_values[i-1]+step_size*k3)
 
-        yValues[i]=yValues[i-1]+stepSize*(k1+2*k2+2*k3+k4)/6
+        y_values[i]=y_values[i-1]+step_size*(k1+2*k2+2*k3+k4)/6
 
-    return yValues
+    return y_values
 
-def RK23_1D(func,t0,y0,t,tol=1e-1):
-    tValues=[t0]
-    yValues=[y0]
+def rk23_1D(func,t0,y0,t,tol=1e-1):
+    t_values=[t0]
+    y_values=[y0]
 
-    while tValues[-1]+1e-6<t:
+    while t_values[-1]+1e-6<t:
         h=0.1
 
         for i in range(5):
-            k1=func(tValues[-1],yValues[-1])
-            k2=func(tValues[-1]+h/2,yValues[-1]+h*k1/2)
-            k3=func(tValues[-1]+3*h/4,yValues[-1]+3*h*k2/4)
-            k4=func(tValues[-1]+h,yValues[-1]+h*(2*k1+3*k2+4*k3)/9)
+            k1=func(t_values[-1],y_values[-1])
+            k2=func(t_values[-1]+h/2,y_values[-1]+h*k1/2)
+            k3=func(t_values[-1]+3*h/4,y_values[-1]+3*h*k2/4)
+            k4=func(t_values[-1]+h,y_values[-1]+h*(2*k1+3*k2+4*k3)/9)
 
-            ord2=yValues[-1]+h*(7*k1+6*k2+8*k3+3*k4)/24
-            ord3=yValues[-1]+h*(2*k1+3*k2+4*k3)/9
+            ord2=y_values[-1]+h*(7*k1+6*k2+8*k3+3*k4)/24
+            ord3=y_values[-1]+h*(2*k1+3*k2+4*k3)/9
 
             if abs(ord2-ord3)==0:
                 h=1
@@ -92,130 +92,130 @@ def RK23_1D(func,t0,y0,t,tol=1e-1):
             elif abs(ord2-ord3)>tol*0.95 and abs(ord2-ord3)<1.05*tol:
                 break
             else:
-                h=min(1,t-tValues[-1],0.1*(tol/abs(ord2-ord3))**(1/2))
+                h=min(1,t-t_values[-1],0.1*(tol/abs(ord2-ord3))**(1/2))
                 h=max(0.01,h)
                 break
 
             if h<=0.011 or h>=1.001: break
 
-        k1=func(tValues[-1],yValues[-1])
-        k2=func(tValues[-1]+h/2,yValues[-1]+h*k1/2)
-        k3=func(tValues[-1]+3*h/4,yValues[-1]+3*h*k2/4)
-        k4=func(tValues[-1]+h,yValues[-1]+h*(2*k1+3*k2+4*k3)/9)
+        k1=func(t_values[-1],y_values[-1])
+        k2=func(t_values[-1]+h/2,y_values[-1]+h*k1/2)
+        k3=func(t_values[-1]+3*h/4,y_values[-1]+3*h*k2/4)
+        k4=func(t_values[-1]+h,y_values[-1]+h*(2*k1+3*k2+4*k3)/9)
 
-        tValues.append(h+tValues[-1])
-        yValues.append(yValues[-1]+h*(7*k1+6*k2+8*k3+3*k4)/24)
+        t_values.append(h+t_values[-1])
+        y_values.append(y_values[-1]+h*(7*k1+6*k2+8*k3+3*k4)/24)
 
-    return tValues,yValues
+    return t_values,y_values
 
-
-###############################################################################
-#*****************************************************************************#
-###############################################################################
-
-def explicitEuler_MD(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
-
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        yValues[i]=yValues[i-1]+stepSize*func(tValues[i-1],*yValues[i-1])
-
-    return yValues
-
-def explicitTrapezoid_MD(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
-
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        nextYAprox=yValues[i-1]+stepSize*func(tValues[i-1],*yValues[i-1])
-        yValues[i]=yValues[i-1]+stepSize*(func(tValues[i-1],*yValues[i-1])+func(tValues[i],*nextYAprox))/2
-
-    return yValues
-
-def midpointMethod_MD(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
-
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        m=yValues[i-1]+stepSize*func(tValues[i-1],*yValues[i-1])/2
-        yValues[i]=yValues[i-1]+stepSize*func(tValues[i-1]+stepSize/2,*m)
-
-    return yValues
-
-def RK4_MD(func,t0,y0,stepSize=0.1,stepNum=50):
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
-
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        k1=func(tValues[i-1],*yValues[i-1])
-        k2=func(tValues[i-1]+stepSize/2,*(yValues[i-1]+stepSize*k1/2))
-        k3=func(tValues[i-1]+stepSize/2,*(yValues[i-1]+stepSize*k2/2))
-        k4=func(tValues[i],*(yValues[i-1]+stepSize*k3))
-
-        yValues[i]=yValues[i-1]+stepSize*(k1+2*k2+2*k3+k4)/6
-
-    return yValues
 
 ###############################################################################
 #*****************************************************************************#
 ###############################################################################
 
-def explicitEuler(func,t0,y0,stepSize=0.1,stepNum=50):
-    # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
+def explicit_euler_md(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
+
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        y_values[i]=y_values[i-1]+step_size*func(t_values[i-1],*y_values[i-1])
+
+    return y_values
+
+def explicit_trapezoid_md(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
+
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        nextYAprox=y_values[i-1]+step_size*func(t_values[i-1],*y_values[i-1])
+        y_values[i]=y_values[i-1]+step_size*(func(t_values[i-1],*y_values[i-1])+func(t_values[i],*nextYAprox))/2
+
+    return y_values
+
+def midpoint_method_md(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
+
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        m=y_values[i-1]+step_size*func(t_values[i-1],*y_values[i-1])/2
+        y_values[i]=y_values[i-1]+step_size*func(t_values[i-1]+step_size/2,*m)
+
+    return y_values
+
+def rk4_md(func,t0,y0,step_size=0.1,step_num=50):
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
+
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        k1=func(t_values[i-1],*y_values[i-1])
+        k2=func(t_values[i-1]+step_size/2,*(y_values[i-1]+step_size*k1/2))
+        k3=func(t_values[i-1]+step_size/2,*(y_values[i-1]+step_size*k2/2))
+        k4=func(t_values[i],*(y_values[i-1]+step_size*k3))
+
+        y_values[i]=y_values[i-1]+step_size*(k1+2*k2+2*k3+k4)/6
+
+    return y_values
+
+###############################################################################
+#*****************************************************************************#
+###############################################################################
+
+def explicit_euler(func,t0,y0,step_size=0.1,step_num=50):
+    # Approximates the value of y at time t0+step_size*k, for k=0,...,step_num,
     # considering that the derivative of y equals func(t,y) and y0=y(t0)
     # using Euler's explicit method
 
-    if (type(y0)==int) or (type(y0)==float): return explicitEuler_1D(func,t0,y0,stepSize,stepNum)
-    else: return explicitEuler_MD(func,t0,y0,stepSize,stepNum)
+    if (type(y0)==int) or (type(y0)==float): return explicit_euler_1d(func,t0,y0,step_size,step_num)
+    else: return explicit_euler_md(func,t0,y0,step_size,step_num)
 
-def explicitTrapezoid(func,t0,y0,stepSize=0.1,stepNum=50):
-    # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
+def explicit_trapezoid(func,t0,y0,step_size=0.1,step_num=50):
+    # Approximates the value of y at time t0+step_size*k, for k=0,...,step_num,
     # considering that the derivative of y equals func(t,y) and y0=y(t0)
     # using trapezoid explicit method
 
-    if (type(y0)==int) or (type(y0)==float): return explicitTrapezoid_1D(func,t0,y0,stepSize,stepNum)
-    else: return explicitTrapezoid_MD(func,t0,y0,stepSize,stepNum)
+    if (type(y0)==int) or (type(y0)==float): return explicit_trapezoid_1D(func,t0,y0,step_size,step_num)
+    else: return explicit_trapezoid_md(func,t0,y0,step_size,step_num)
 
-def implicitEuler(func,t0,y0,stepSize=0.1,stepNum=50):
-    # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
+def implicit_euler(func,t0,y0,step_size=0.1,step_num=50):
+    # Approximates the value of y at time t0+step_size*k, for k=0,...,step_num,
     # considering that the derivative of y equals func(t,y) and y0=y(t0)
     # using Euler's explicit method
 
-    tValues=[t0+stepSize*i for i in range(stepNum+1)]
-    yValues=[0 for i in range(stepNum+1)]
+    t_values=[t0+step_size*i for i in range(step_num+1)]
+    y_values=[0 for i in range(step_num+1)]
 
-    yValues[0]=y0
-    for i in range(1,stepNum+1):
-        def findSig(y):
-            return y-yValues[i-1]-stepSize*func(tValues[i],y)
+    y_values[0]=y0
+    for i in range(1,step_num+1):
+        def find_sig(y):
+            return y-y_values[i-1]-step_size*func(t_values[i],y)
 
-        yValues[i]=newtonSolve(findSig,yValues[i-1]+stepSize*func(tValues[i-1],yValues[i-1]))
+        y_values[i]=newton_solve(find_sig,y_values[i-1]+step_size*func(t_values[i-1],y_values[i-1]))
 
-    return yValues
+    return y_values
 
-def midpointMethod(func,t0,y0,stepSize=0.1,stepNum=50):
-    # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
+def midpoint_method(func,t0,y0,step_size=0.1,step_num=50):
+    # Approximates the value of y at time t0+step_size*k, for k=0,...,step_num,
     # considering that the derivative of y equals func(t,y) and y0=y(t0)
     # using midpoint method
 
-    if (type(y0)==int) or (type(y0)==float): return midpointMethod_1D(func,t0,y0,stepSize,stepNum)
-    else: return midpointMethod_MD(func,t0,y0,stepSize,stepNum)
+    if (type(y0)==int) or (type(y0)==float): return midpoint_method_1D(func,t0,y0,step_size,step_num)
+    else: return midpoint_method_md(func,t0,y0,step_size,step_num)
 
-def RK23(func,t0,y0,t,tol):
+def rk23(func,t0,y0,t,tol):
     # Approximates a trajectory y considering that between any two step the approximation
     # is of the same order as tol and that the derivative of y equals func(t,y) and y0=y(t0)
     # using Bogacki-Shampine method
 
-    return RK23_1D(func,t0,y0,t,tol)
+    return rk23_1D(func,t0,y0,t,tol)
 
-def RK4(func,t0,y0,stepSize=0.1,stepNum=50):
-    # Approximates the value of y at time t0+stepSize*k, for k=0,...,stepNum,
+def rk4(func,t0,y0,step_size=0.1,step_num=50):
+    # Approximates the value of y at time t0+step_size*k, for k=0,...,step_num,
     # considering that the derivative of y equals func(t,y) and y0=y(t0)
     # using Runge Kutta-4
 
-    if (type(y0)==int) or (type(y0)==float): return RK4_1D(func,t0,y0,stepSize,stepNum)
-    else: return RK4_MD(func,t0,y0,stepSize,stepNum)
+    if (type(y0)==int) or (type(y0)==float): return rk4_1D(func,t0,y0,step_size,step_num)
+    else: return rk4_md(func,t0,y0,step_size,step_num)
