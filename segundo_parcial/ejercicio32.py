@@ -4,21 +4,21 @@ import numpy as np
 def y_prime(t,y):
     return 2*(t+1)*y
 
-def correct_y(t0,y0,t):
+def exact_solution(t0,y0,t):
     return y0*np.exp(t*t-t0*t0+2*(t-t0))
 
 # Ejercicio 3.2.1
 wT1=odes.explicitTrapezoid(y_prime,t0=0,y0=1,stepSize=0.1,stepNum=10)
-errorT1=abs(wT1[-1]-correct_y(0,1,1))
+errorT1=abs(wT1[-1]-exact_solution(0,1,1))
 print('Error global de trapecio explícito en t=1 con h=1/10:',errorT1,'\n')
 
 # Ejercicio 3.2.2
 wT2=odes.explicitTrapezoid(y_prime,t0=0,y0=1,stepSize=0.05,stepNum=20)
-errorT2=abs(wT2[-1]-correct_y(0,1,1))
+errorT2=abs(wT2[-1]-exact_solution(0,1,1))
 print('Error global de trapecio explícito en t=1 con h=1/20:',errorT2)
 
 wRK4=odes.RK4(y_prime,t0=0,y0=1,stepSize=0.1,stepNum=10)
-errorRK=abs(wRK4[-1]-correct_y(0,1,1))
+errorRK=abs(wRK4[-1]-exact_solution(0,1,1))
 print('Error global de RK4 en t=1 con h=1/10:',errorRK,'\n')
 
 # Ejercicio 3.2.3

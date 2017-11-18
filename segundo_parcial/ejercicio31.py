@@ -21,14 +21,14 @@ print()
 
 # Exercise 3.1.2
 # Part 1
-def correct_y(t0,y0,t):
+def exact_solution(t0,y0,t):
     return y0*np.exp(t*t-t0*t0+2*(t-t0))
-print('Error global de la aproximación:',abs(correct_y(t0,y0,1)-w[-1]),'\n')
+print('Error global de la aproximación:',abs(exact_solution(t0,y0,1)-w[-1]),'\n')
 
 # Part 2
 maxError=0
 for i in range(1,stepNum+1):
-    maxError=max(maxError,abs(correct_y(t0+(i-1)*stepSize,w[i-1],t0+i*stepSize)-w[i]))
+    maxError=max(maxError,abs(exact_solution(t0+(i-1)*stepSize,w[i-1],t0+i*stepSize)-w[i]))
 
 print('Error máximo local:',maxError,'\n')
 
@@ -36,7 +36,7 @@ print('Error máximo local:',maxError,'\n')
 h=[0.1*2**(-i) for i in range(6)]
 errors=[]
 for i in range(6):
-    errors.append(abs(correct_y(t0,y0,1)-odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*(2**i))[-1]))
+    errors.append(abs(exact_solution(t0,y0,1)-odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*(2**i))[-1]))
 
 plt.loglog(h, errors, marker = '.')
 plt.xlabel('h')
@@ -51,7 +51,7 @@ for i in range(6):
     maxError=0
     w=odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*2**(i))
     for j in range(1,10*(2**i)+1):
-        maxError=max(maxError,abs(correct_y(t0+(j-1)*h[i],w[j-1],t0+j*h[i])-w[j]))
+        maxError=max(maxError,abs(exact_solution(t0+(j-1)*h[i],w[j-1],t0+j*h[i])-w[j]))
 
     local_errors.append(maxError)
 
