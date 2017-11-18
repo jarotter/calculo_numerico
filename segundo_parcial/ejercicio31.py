@@ -50,7 +50,7 @@ local_errors=[]
 for i in range(6):
     maxError=0
     w=odes.explicitEuler(y_prime,t0=t0,y0=y0,stepSize=h[i],stepNum=10*2**(i))
-    for j in range(1,10*(2**i)):
+    for j in range(1,10*(2**i)+1):
         maxError=max(maxError,abs(correct_y(t0+(j-1)*h[i],w[j-1],t0+j*h[i])-w[j]))
 
     local_errors.append(maxError)
