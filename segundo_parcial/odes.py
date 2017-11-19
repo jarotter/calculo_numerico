@@ -92,7 +92,7 @@ def rk23_1D(func,t0,y0,t,tol=1e-1):
             elif abs(ord2-ord3)>tol*0.95 and abs(ord2-ord3)<1.05*tol:
                 break
             else:
-                h=min(1,t-t_values[-1],0.1*(tol/abs(ord2-ord3))**(1/2))
+                h=min(1,t-t_values[-1],0.1*(tol/abs(ord2-ord3))**(1/3))
                 h=max(0.01,h)
                 break
 
