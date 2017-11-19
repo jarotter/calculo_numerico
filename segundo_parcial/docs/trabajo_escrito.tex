@@ -1,0 +1,351 @@
+\documentclass[spanish]{article}
+
+\usepackage[spanish, mexico]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol, caption}
+\usepackage{fullpage}
+\usepackage{changepage} 
+
+%Para las figuras
+\usepackage{here}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+\begin{document}
+\author{Saúl Adrián Alvarez Tapia \and Carlos Eduardo Gil Mezta \and Jorge Antonio Rotter Vallejo \and Sergio de Jesús Arnaud Gómez}
+
+\title{\Huge Práctica 2: Ecuaciones diferenciales ordinarias}
+\date{}
+\maketitle
+
+\noindent
+\section{Introducción}
+Los problemas de valor inicial (PVI) de la forma
+\begin{align*}
+\dot{y} = f(t,y) \ \ \ \ y(t_0) = y_0
+\end{align*}
+y problemas de valores en la frontera (PVF)
+\begin{align*}
+\dot{y} = f(t,y) \ \ \ \ y(a) = y_a, \ \ y(b) = y_b
+\end{align*}
+aparecen frecuentemente en aplicaciones. Sin embargo, no siempre es posible calcular
+la solución analítica, por lo que utilizar métodos numéricos que permitan aproximar
+la solución en cierto intervalo es deseable. En este trabajo exploraremos algunos de
+los más conocidos.
+
+\section{Ejercicios}
+%----PREGUNTA UNO -----
+\subsection{Método de Euler}
+Aplicamos el método de Euler explícito con paso $h = 0.1$ al problema de valor inical
+\begin{align}
+\dot{y} = 2(t+1)y, \ \ \ \ y(0) = 1
+\end{align}
+en el intervalo [0,1]. En primer lugar, sea $f(t,y) = 2(t+1)y$. Como $\frac{\partial f}{\partial t} = 2y$ y $\frac{\partial f}{\partial y} = 2(t+1)$ existen y son continuas, $f$ es de clase $C^1$ y, entonces, $f$ es Lipschitz en la variable $y$ en $[0,1] \times (- \infty, \infty)$, lo cual garantiza existencia y unicidad de solución en el intervalo $[0,1]$. Dicha solución está dada por
+\begin{align}
+y(t) = e^{t^2+2t}
+\end{align}
+Los primeros diez pasos de la solución numérica son
+\begin{multicols}{3}
+\noindent
+$w_0$ = 1.000000\\
+$w_1$ = 1.200000 \\
+$w_2$ = 1.464000 \\
+$w_3$ = 1.815360 \\
+$w_4$ = 2.287354 \\
+$w_5$ = 2.927813 \\
+$w_6$ = 3.806156 \\
+$w_7$ = 5.024126 \\
+$w_8$ = 6.732329 \\
+$w_9$ = 9.155968 \\
+$w_{10}$ = 12.635236
+\end{multicols}
+\noindent
+Por lo que el error global en $t=1$ es $|y(20)-w_{20}| = |e^3 - 12.635236| = 
+7.45030106146.$ Por otro lado, el máximo de los errores locales es 0.887953046931. 
+
+
+Consideremos ahora $k \in \{0, 1, \cdots, 5\}$ y para cada $k$ definamos $h_k =
+0.1 \times 2^{-k}$.  Utilizando estos cinco pasos distintos, calculamos el máximo
+error local del método de Euler y el orden de convergencia experimental (eoc por sus 
+siglas en inglés).
+
+\begin{table}[h]
+\caption{Máximo error local variando $k$}
+\centering
+\begin{tabular}{cccc}
+\hline \hline
+$k$ & $h_k$ & error máximo & eoc \\ [0.5ex]
+0 & 0.1 &  0.8879530469307 & 0.7226540856 \\
+1 & 0.05 & 0.3042892933331 & 0.8413914232 \\
+2 & 0.025 & 0.0916125557850 & 0.9146020379 \\
+3 & 0.0125 & 0.0253515053938 & 0.9556017523 \\
+4 & 0.00625 & 0.0066840984390 & 0.9773510743 \\
+5 & 0.003125 & 0.0017171531595 & ------------ \\
+\hline
+\end{tabular}
+\label{tab:hresult}
+\end{table}
+\newpage
+En la tabla podemos ver que cuando el paso se reduce a la mitad, el máximo
+error local decrece.
+Ahora presentamos una gráfica de los resultados
+
+\includegraphics[scale = 0.4]{plot}
+
+\newpage
+%----PREGUNTA DOS -----
+\noindent
+\subsection{Trabajo, precisión y orden}
+Consideremos otra vez el problema de valor inicial (1) y su solución exacta, (2). En la tabla 2 comparamos
+el error del método del trapecio con dos pasos distintos y de Runge-Kutta-4. 
+
+\begin{table}[h]
+\caption{Comparación de Runge-Kutta-4 y trapecio}
+\centering
+\begin{tabular}{cccc}
+\hline \hline
+$ $ & Trapecio($h_1$) & Trapecio($h_2$) & Runge-Kutta-4 \\
+Error global en $t=1$ & 0.7792153733  &  0.2218238872 & 0.0042700959 \\
+Número de estados  &     20       &       40       &       40 \\
+\hline
+\end{tabular}
+\end{table}
+En este caso, es más conveniente cambiar a un método de mayor orden que reducir el
+tamaño del paso. Tanto RK4 con paso $h_1$ como el método del trapecio con paso 
+$h_2$ tienen cuarenta estados, pero el error con RK4 es significativamente menor.
+Esto se debe a que en el método del trapecio, el error global es $O(h^2)$, así que al 
+dividir el paso entre 2, reducimos el error por un factor de 4. En cambio, al 
+cambiar a Runge-Kutta-4, el error es $O(h^4)$, así que manteniendo  la misma h, reducimos el error global en un factor de (1/100)/(1/10000)=100, que es significativamente menor. 
+
+%---- PREGUNTA TRES ----
+\noindent
+\subsection{Método del punto medio}
+Trabajaremos ahora en el intervalo [0,1] con el problema de valor inicial 
+\begin{align*}
+\dot{y} = \begin{pmatrix}
+-y_1+y_2 \\
+-y_1-y_2
+\end{pmatrix}
+\ \ \ \ y(0) = \begin{pmatrix}
+0  \\ 1
+\end{pmatrix}
+\end{align*}
+
+Sean $f_1(t, y_1, y_2) = -y_1+y_2$ y $f_2(t, y_1, y_2) = -y_1-y_2$. Como $\frac{\partial f_1}{\partial t } = 0$, $\frac{\partial f_1}{\partial y_1 } = -1$, $\frac{\partial f_1}{\partial y_2 } = 1$, $\frac{\partial f_2}{\partial t } = 0$, $\frac{\partial f_2}{\partial y_1 } = 1$ y $\frac{\partial f_2}{\partial y_2 } = -1$ existen y son continuas, $f$ es Lipschitz en las variables $y_1$ y $y_2$ en $[0,1] \times (- \infty, \infty) \times (- \infty, \infty)$, lo cual garantiza que la solución existe y que es única. Observemos que la solución exacta es 
+\begin{align*}
+y(t) = \begin{pmatrix}
+e^{-t}\sin t\\
+e^{-t} \cos t
+\end{pmatrix}
+\end{align*}
+Usando el método del punto medio, con $h = \frac{1}{10}$ el error global en $t=1$ es  
+0.0.00184835935056, mientras que con $h = \frac{1}{100}$ es $1.70989717275 \times 	
+10^{-5}.$ Este error es consistente con la teoría, pues por ser de orden dos,
+esperaríamos que al reducir el paso diez veces, el error se redujera cien (diez al 
+cuadrado) veces; y dividiendo el primer error entre cien, obtenemos $1.84835935056
+\times 10^{-5}$, muy cercano al experimental.
+
+
+
+%---- PREGUNTA CUATRO ----
+\noindent
+\subsection{Ecuaciones \textit{stiff}}
+Consideremos el problema de valor inicial
+\begin{align*}
+\dot{y} = 5y-3y^2, \ \ y(0) = \frac{1}{2}, \ \ t \in [0,20]
+\end{align*}
+Sea $f(t,y) = 5y-3y^2$. Como $\frac{\partial f}{\partial t} = 0$ y $\frac{\partial f}{\partial y} = 5-6y$ existen y son continuas, $f$ es de clase $C^1$ y, así, $f$ es Lipschitz en la variable $y$ en $[0, 20] \times (- \infty, \infty)$. De este modo, existe una única solución al problema de valor inicial.
+Veamos ahora que las soluciones de equilibro de la ecuación son $y \equiv 0$ y 
+$y \equiv \frac{5}{3}$.
+Aplicando Euler implícito con paso constante $h = \frac{1}{2}$, obtenemos que
+$y(20) \approx w_{20} = 1.\bar{6} = 5/3$, la solución de equilibrio hacia
+la cual converge.
+Aplicando Euler explícito con distintos pasos ($h \in \{\frac{1}{6}, \frac{1}{5}, 
+\frac{1}{4}, \frac{1}{2} \}$) obtenemos convergencia a la misma solución en todas
+excepto $h = \frac{1}{2}$, que aproxima $w_{20} = 2.04166028173897$.
+
+Esto se debe a que la ecuación es \textit{stiff}, y para que la función de iteración
+dada por el método de Euler explícito converja al punto fijo $w^* = \frac{5}{3}$, se
+requiere $|F'(\frac{5}{3})| = |1+5h-6h\frac{5}{3}|<1$. Y esto se da si y sólo si 
+$0 < h < \frac{2}{5}$. Por eso no funcionó cuando $h$ era 0.5.
+
+Si ahora aplicamos el método de Bogacki–Shampine [Sa12]  con tolerancia $tol = 
+\frac{1}{10}$  obtenemos $w_{20} = 1.6684838860728615$; y si bajamos la tolerancia 
+hasta  $\frac{1}{100}$, aproximamos $w_{20} = 1.6622585157962926$. 
+
+
+%----PREGUNTA CINCO -----
+\noindent
+\subsection{Verificar orden}
+Para comparar los métodos, usaremos el siguiente problema de valor inicial
+$$
+\dot{y}(t) = y^2-4, \ \ y(0) = 0,  \ \ t \in [0,2]
+$$
+
+Sea $f(t,y) = y^2-4$. Dado que $\frac{\partial f}{\partial t} = 0$ y $\frac{\partial f}{\partial y} = 2y$ existen y son continuas, $f$ es de clase $C^1$ y, así, $f$ es Lipschitz en la variable $y$ en $[0,2] \times (- \infty, \infty)$. Por el teorema de existencia y unicidad, se garantiza que la solución del problema de valor inicial es única en el intervalo $[0,2]$. De hecho, por medio de separación de variables, obtenemos que la solución es
+$$
+y(t) = \frac{2-2e^{4t}}{e^{4t}+1}
+$$ 
+
+A continuación se muestran los errores globales y los órdenes de convergencia experimental obtenidos con los métodos Euler explícito, Trapecio explícito, punto medio explícito y Runge-Kutta-4 con los pasos $h \in \{ 0.02, 0.01, 0.005 \}$.
+
+\begin{table}[h]
+\caption{Euler explícito}
+\centering
+\begin{tabular}{ccc}
+\hline \hline
+$h$ & error global & eoc  \\
+0.02 & 0.000326129190757 & 0.938507629735  \\
+0.01 & 0.000170165190836 & 0.969815078371 \\
+0.005 & $8.68814971831 \times 10^{-5}$ & ------------  \\
+\hline
+\end{tabular}
+\label{tab:hresult}
+\end{table}
+
+\begin{table}[h]
+\caption{Trapecio explícito}
+\centering
+\begin{tabular}{ccc}
+\hline \hline
+$h$ & error global & eoc \\
+0.02 & $9.87464998814 \times 10^{-6}$ & 2.04469956316 \\
+0.01 & $2.3933477753 \times 10^{-6}$ & 2.02132686209 \\
+0.005 & $5.89556991004 \times 10^{-7}$  & ------------ \\
+\hline
+\end{tabular}
+\label{tab:hresult}
+\end{table}
+
+\begin{table}[h]
+\caption{Punto medio explícito}
+\centering
+\begin{tabular}{ccc}
+\hline \hline
+$h$ & error global & eoc \\
+0.02 & $8.72843297439 \times 10^{-6}$ & 2.043896697077 \\
+0.01 & $2.11671344053 \times 10^{-6}$ & 2.02104780509 \\
+0.005 & $5.21514100793 \times 10^{-7}$  & ------------ \\
+\hline
+\end{tabular}
+\label{tab:hresult}
+\end{table}
+
+\begin{table}[h]
+\caption{Runge-Kutta-4 }
+\centering
+\begin{tabular}{ccc}
+\hline \hline
+$h$ & error global & eoc \\
+0.02 & $2.88204349275 \times 10^{-9}$ & 4.04473089128 \\
+0.01 & $1.74628533856 \times 10^{-10}$ & 4.02234855171 \\
+0.005 & $1.07465147892 \times 10^{-11}$  & ------------ \\
+\hline
+\end{tabular}
+\label{tab:hresult}
+\end{table}
+\newpage
+De las tablas anteriores podemos ver cómo el error global se reduce aproximadamente a la mitad cuando el paso $h$ se reduce a la mitad y podemos verificar, por medio del orden experimental de convergencia, que se cumple que el método de Euler es de orden 1, que el método del trapecio y el del punto medio son de orden 2 y que el método Runge-Kutta-4 es de orden 4.
+
+%----PREGUNTA SEIS -----
+\noindent
+\subsection{Diferencias finitas}
+
+Consideremos el problema de valores en la frontera
+$$
+\ddot{y} = 10 \ \dot{y} (1-y), \ \ y(0) = 1,  \ \ y(1) = 1 - \frac{\pi}{20}
+$$
+que tiene como solución exacta
+$$
+y(t) = 1 - \frac{\pi}{20} \tan \left( \frac{\pi}{4} t \right)
+$$
+Usando el método de diferencias finitas de orden dos, dado que
+$$
+\dot{y}(t) = \frac{y(t+h)-y(t-h)}{2h} + O(h^2)
+$$
+$$
+\ddot{y}(t) = \frac{y(t+h)-2y(t)+y(t-h)}{h^2} + O(h^2)
+$$
+Podemos escribir la discretización del problema como
+$$
+\frac{y(t+h)-2y(t)+y(t-h)}{h^2} = \frac{10(y(t+h)-y(t-h)) \cdot (1-y)}{2h} 
+$$
+Sustituyendo $w_{n-1} = y(t-h)$, $w_{n} = y(t)$ y $w_{n+1} = y(t+h)$ y reorganizando la ecuación anterior, obtenemos:
+$$
+w_{n+1}-2w_{n}+w_{n-1} - 5h \cdot (w_{n+1} - w_{n-1}) \cdot (1-w_{n}) = 0
+$$
+Definimos
+$$
+F(w) = 
+\begin{pmatrix}
+w_{2}-2w_{1}+w_{0} - 5h \cdot (w_{2} - w_{0}) \cdot (1-w_{1}) \\
+w_{3}-2w_{2}+w_{1} - 5h \cdot (w_{3} - w_{1}) \cdot (1-w_{2})\\
+\vdots \\
+w_{i+1}-2w_{i}+w_{i-1} - 5h \cdot (w_{i+1} - w_{i-1}) \cdot (1-w_{i}) \\
+\vdots \\
+w_{n+1}-2w_{n}+w_{n-1} - 5h \cdot (w_{n+1} - w_{n-1}) \cdot (1-w_{n})
+\end{pmatrix}
+$$
+Sustituyendo $w_0 = y(0) = 1 $ y $w_{n+1} = y(1) = 1 - \frac{\pi}{20}$
+$$
+F(w) = 
+\begin{pmatrix}
+w_{2}-2w_{1}+1 - 5h \cdot (w_{2} - 1) \cdot (1-w_{1}) \\
+w_{3}-2w_{2}+w_{1} - 5h \cdot (w_{3} - w_{1}) \cdot (1-w_{2})\\
+\vdots \\
+w_{i+1}-2w_{i}+w_{i-1} - 5h \cdot (w_{i+1} - w_{i-1}) \cdot (1-w_{i}) \\
+\vdots \\
+1 - \frac{\pi}{20}-2w_{n}+w_{n-1} - 5h \cdot (1 - \frac{\pi}{20} - w_{n-1}) \cdot (1-w_{n})
+\end{pmatrix}
+$$
+Para resolver $F(w) = 0$, usamos la versión matricial del método de Newton-Raphson, dada por:
+$$
+x_{n+1} = x_n - F(x_n) \cdot DF(x_n)^{-1}
+$$
+donde $DF(x_n)$ es la matriz jacobiana de F.
+
+
+Por eficiencia, resolvemos la siguiente ecuación de la forma $Ax = b$:
+$$
+DF(x_n) \cdot x = F(x_n)
+$$
+usando el método “solve” de Python, donde $DF(w)$ está dado por la siguiente matriz tridiagonal 
+\begin{adjustwidth*}{-2.9cm}{-2.2cm}
+$$
+DF(w) = 
+\begin{pmatrix}
+-2+5h \cdot (w_2-1)  & 1-5h \cdot (1-w_1)   & 0 & \dots 0\\
+1+5h \cdot (1-w_2)  & -2+5h \cdot (w_3-w_1)  & 1-5h \cdot (1-w_2) & \dots 0\\
+\\
+0 \ \  \ \ \ \ \ \ \ \ \ \ \ \  \ \  \ \ddots & \ \ \ \ \ \ \ \ \  \ \ \ \ \ \  \ \ \ \ \ \ \ \ \ \  \  \ddots & \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \  \ \ \  \ \ \ \ \ \ddots & \vdots \\
+\\
+
+0 \ \  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \  \  & 1+5h \cdot (1-w_{n-1})  & -2+5h \cdot (w_n-w_{n-2})  & 1-5h \cdot (1-w_{n-1}) \\
+0 \ \  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \dots & 0 & 1+5h \cdot (1-w_{n})  & -2+5h \cdot (1 - \frac{\pi}{20}-w_{n-1})
+\end{pmatrix}
+$$
+\end{adjustwidth*}
+
+En la siguiente tabla se muestran los errores globales y los órdenes de convergencia experimentales del método de diferencias finitas de orden 2 para los pasos $h \in \{ 0.05, 0.025,  0.0125 \}$
+
+\begin{table}[h]
+\caption{Diferencias finitas con distintos pasos}
+\centering
+\begin{tabular}{ccc}
+\hline \hline
+$h$ & error global & eoc \\
+0.05 & 0.0135543347628 & 1.06968698976 \\
+0.025 & 0.00645758806692 & 1.033465018674 \\
+0.0125 & 0.0031547603046  & ------------ \\
+\hline
+\end{tabular}
+\label{tab:hresult}
+\end{table}
+En la tabla anterior puede verificarse cómo reducir el paso $h$ a la mitad ocasiona que el error se reduzca aproximadamente la mitad y cómo este es un método de orden 1.
+
+\section{Referencias}
+
+[Sa12]  \ \  Sauer, T. \textit{Numerical Analysis}, Pearson, 2012, 327.
+
+\end{document}
