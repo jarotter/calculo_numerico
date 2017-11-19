@@ -116,8 +116,7 @@ Número de estados  &     20       &       40       &       40 \\
 En este caso, es más conveniente cambiar a un método de mayor orden que reducir el
 tamaño del paso. Tanto RK4 con paso $h_1$ como el método del trapecio con paso 
 $h_2$ tienen cuarenta estados, pero el error con RK4 es significativamente menor.
-Esto se debe a que en el método del trapecio, el error global es $O(h^2)$, así que al 
-dividir el paso entre 2, reducimos el error por un factor de 4. En cambio, al 
+Esto se debe a que en el método del trapecio, el error global es $O(h^2)$, así que al dividir el paso entre 2, reducimos el error por un factor de 4. En cambio, al 
 cambiar a RK4, el error es $O(h^4)$, así que manteniendo  la misma h, reducimos el 
 error global en un factor de (1/100)/(1/10000)=100, que es significativamente menor.
 
@@ -171,6 +170,19 @@ requiere $|F'(\frac{5}{3})| = |1+5h-6h\frac{5}{3}|<1$. Y esto se da si y sólo s
 $0 < h < \frac{2}{5}$. Por eso no funcionó cuando $h$ era 0.5.
 
 Si ahora aplicamos el método de Bogacki–Shampine [Sa12]  con tolerancia $tol = 
-\frac{1}{10}$  obtenemos $w_{20} = 1.6684838860728615$; y si bajamos la tolerancia 
-hasta  $\frac{1}{100}$, aproximamos $w_{20} = 1.6622585157962926$. 
+\frac{1}{10}$  obtenemos $w_{20} = 1.6599026665708498$; y si bajamos la tolerancia 
+hasta  $\frac{1}{100}$, aproximamos $w_{20} = 1.6851656759039848$.
+
+De aquí, se puede ver que el método implícito es mejor que el método explícito 
+adaptativo. Esto tiene una razón de ser. Para ajustar el paso del método de 
+Bogacki-Shampine, se asume implícitamente que el error del método de menor orden 
+es exactamente $h^3$, en vez de el verdadero $O(h^3)$. En la notación big-$O$, se 
+esconde un factor que en la mayoría de los casos es pequeño. Sin embargo, en la 
+ecuación presentada, al ser \textit{stiff}, tiene una tercera derivada con magnitud 
+muy chica cerca de $y=\dfrac{5}{3}$, y mucho más grande cuando se aleja de este valor.
+
+Por lo tanto, al reescalar $h$ usando $h_{nueva}=h_{vieja}\sqrt[3]{tol/error_{viejo}}$, 
+nuestra $h$ nueva tendrá un error más grande que el previsto al asumir que el error es
+$h^3$. Al dar múltiples pasos, el error se acumulará, y no será tan preciso como el 
+incondicionalmente estable Euler implícito.
 \end{document}
