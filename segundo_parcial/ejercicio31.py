@@ -43,7 +43,7 @@ plt.xlabel('h')
 plt.ylabel('global error at 1')
 plt.title('Global error at ' r'$t=1$' + ' as a function of ' + r'$h = 0.1×2^{-k}$')
 plt.grid(True)
-plt.savefig('plot31.eps', format = 'eps')
+plt.savefig('plot31.pdf', format = 'pdf')
 
 # Part 4
 local_errors=[]
