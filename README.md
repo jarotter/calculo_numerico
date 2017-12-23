@@ -10,6 +10,10 @@ https://shop.juliacomputing.com/Products/
 El primer parcial trató álgebra lineal; y particularmente aproximación de valores y vectores propios con los métodos de
 la potencia y QR.
 
-##Segundo parcial
+## Segundo parcial
 Ecuaciones diferenciales ordinarias: método de Euler y en general métodos Runge,
 Kutta; problemas de valores en la frontera, métodos de paso adaptativo.
+
+## Tercer parcial
+Ecuaciones diferenciales parciales con diferencias finitas: la ecuación del 
+calor y la del transporte.
