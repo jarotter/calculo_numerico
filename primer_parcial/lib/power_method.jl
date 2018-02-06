@@ -49,6 +49,10 @@ function _potencia_inversa_con_shift(A, q₀, max_iter, ε, ρ)
     σ = 0.0
     n = size(A)[1]
     A = A - ρ*eye(n)
+    if rank(A)<n
+        ρ=ρ+10*ε
+        A = A - ρ*eye(n)
+    end
 
     for j = 1:max_iter
         q = A\q̂
