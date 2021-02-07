@@ -1,3 +1,4 @@
+
 """"
 
     qr_simple(A, max_iter, ε)
@@ -19,7 +20,7 @@ Si no lo es, puede ignorarse)
 
 """
 function qr_simple(A, max_iter, ε)
-
+"Editen estas cosas para que regresar vectores propios no dependa de si es simétrica. Usen la Q de Hessenberg para esto."
     is_symmetric = issymmetric(A)
     F = hessfact(A)
     A = F[:H]
